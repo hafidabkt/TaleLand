@@ -11,7 +11,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
         body: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -23,7 +22,30 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-          BookCard(book: books[0]),
+          Container(
+            height: 300,
+            margin: EdgeInsets.all(8),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: books.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BookDetailsScreen(book: books[index]),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    child: BookCard(book: books[index]),
+                  ),
+                );
+              },
+            ),
+          ),
           Container(
             margin: EdgeInsets.only(bottom: 0, left: 20, top: 20, right: 20),
             child: Text(
@@ -33,7 +55,7 @@ class HomeScreen extends StatelessWidget {
           ),
           // Popular Writers
           Container(
-            height: 200,
+            height: 201,
             width: 150,
             margin: EdgeInsets.only(bottom: 12, left: 25, top: 12, right: 20),
             child: ListView.builder(
@@ -81,7 +103,6 @@ class HomeScreen extends StatelessWidget {
     ));
   }
 }
-
 
 class AuthorProfileCard extends StatelessWidget {
   final Profile author;

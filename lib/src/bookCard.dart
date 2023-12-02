@@ -63,52 +63,56 @@ class _BookCardState extends State<BookCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                  Row(children: [
-                    Icon(Icons.visibility,color:myAccent),
-                    SizedBox(
-                        width: 8,
-                      ),
-                    Text('${widget.book.views}'),
-                  ],),
-                  Row(
-                    children: [
-                      IconButton(
-                                icon: Icon(
-                                  widget.book.isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: widget.book.isLiked ? myAccent : null,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.book.isLiked = !widget.book.isLiked;
-                                    if (widget.book.isLiked) {
-                                      widget.book.likes++;
-                                    }
-                                  });
-                                },
-                              ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('${widget.book.likes}'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.mode_comment,color:myAccent),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('${widget.book.comments}')
-                    ],
-                  ),
+                      Row(
+                        children: [
+                          Icon(Icons.visibility, color: myAccent),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text('${widget.book.views}'),
                         ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              widget.book.isLiked
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: widget.book.isLiked ? myAccent : null,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                widget.book.isLiked = !widget.book.isLiked;
+                                if (widget.book.isLiked) {
+                                  widget.book.likes++;
+                                }
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text('${widget.book.likes}'),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.mode_comment, color: myAccent),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text('${widget.book.comments}')
+                        ],
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 12,),
+                  SizedBox(
+                    height: 12,
+                  ),
                   Text(
                     widget.book.description,
-                    style: TextStyle(fontSize: 16,color: myBrownColor),
+                    style: TextStyle(fontSize: 16, color: myBrownColor),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

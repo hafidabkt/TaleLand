@@ -176,7 +176,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.network(
+                    Image.asset(
                       widget.book.image,
                       fit: BoxFit.cover,
                     ),

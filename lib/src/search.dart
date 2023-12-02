@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/categoryClass.dart';
+
 class SearchScreen extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -14,7 +15,7 @@ class _SearchPageState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading:Icon(Icons.close,color:Colors.white),
+        leading: Icon(Icons.close, color: Colors.white),
         title: TextField(
           onChanged: (value) {
             setState(() {
@@ -46,7 +47,7 @@ class _SearchPageState extends State<SearchScreen> {
             ),
             SizedBox(height: 8),
             Container(
-              height: 500,
+              height: 450,
               child: Center(
                 child: GridView.builder(
                   scrollDirection: Axis.horizontal,
@@ -97,7 +98,6 @@ class _SearchPageState extends State<SearchScreen> {
     );
   }
 
-  
   Widget buildCategoryContainer(Category category) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8.0),
@@ -131,5 +131,3 @@ class _SearchPageState extends State<SearchScreen> {
     );
   }
 }
-
-

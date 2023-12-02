@@ -40,7 +40,7 @@ class _ChatListScreenState extends State<ChatListScreen>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: myColor,
-        leading: Icon(Icons.close,color:myColor),
+        leading: Icon(Icons.close, color: myColor),
         actions: [
           Center(
             child: Row(
@@ -49,7 +49,6 @@ class _ChatListScreenState extends State<ChatListScreen>
                 buildFilterButton('All', 'All'),
                 buildFilterButton('Private', 'Private'),
                 buildFilterButton('Public', 'Public'),
-                SizedBox(width: 120),
               ],
             ),
           ),
@@ -162,7 +161,7 @@ class _ChatListScreenState extends State<ChatListScreen>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(userName: userName,image: image),
+            builder: (context) => ChatScreen(userName: userName, image: image),
           ),
         );
       },

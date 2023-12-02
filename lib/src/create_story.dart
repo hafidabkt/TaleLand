@@ -168,7 +168,7 @@ class _CreateStoryState extends State<CreateStory> {
                         ),
                       ),
                       SizedBox(
-                        width: 150,
+                        width: 30,
                       ),
                       Column(
                         children: [
@@ -231,15 +231,14 @@ class _CreateStoryState extends State<CreateStory> {
               if (!titleController.text.isEmpty &&
                   !tagController.text.isEmpty &&
                   !descriptionController.text.isEmpty) {
-                List<Part> parts = [Part(content: '',title: '')];
+                List<Part> parts = [Part(content: '', title: '')];
                 Book temp = Book(
                     title: titleController.text,
-                    image: 'assets/Book1.png',
+                    image: 'assets/book1.png',
                     description: descriptionController.text,
                     author: 'Jane Marie',
                     tags: tagController.text,
-                    parts: parts
-                    );
+                    parts: parts);
                 if (isPublic) {
                   booksPublished.add(temp);
                 } else {
@@ -248,8 +247,7 @@ class _CreateStoryState extends State<CreateStory> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        WriteChapter(part: temp.parts[0]),
+                    builder: (context) => WriteChapter(part: temp.parts[0]),
                   ),
                 );
                 titleController.clear();

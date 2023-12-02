@@ -14,12 +14,17 @@ The journey led Lila through ethereal landscapes, where talking animals shared a
 In the end, the mask was not merely a physical object but a key to unlocking the secrets hidden within oneself. Lila realized that the forest had a way of revealing what was lost, not in the tangible sense, but in the deepest recesses of the heart. As the first light of dawn broke through the canopy, Lila emerged from the forest, forever changed by the enchanting adventure and the wisdom gained in the search for the lost cat mask.
 ''');
 
-List<Part> parts = [temp,         Part(title: 'The Come Back', content: 'Love is a strong word you guys'),
-  Part(title: 'Was it a Mistake', content: 'hi'),  Part(title: 'Was it a Mistake', content: 'hi')
+List<Part> parts = [
+  temp,
+  Part(title: 'The Come Back', content: 'Love is a strong word you guys'),
+  Part(title: 'Was it a Mistake', content: 'hi'),
+  Part(title: 'Was it a Mistake', content: 'hi')
 ];
+List<Part> p = [Part(title: 'First Part', content: '')];
+
 class Book {
   String title;
-  String image; 
+  String image;
   String description;
   String author;
   bool isPublished;
@@ -46,13 +51,12 @@ class Book {
     this.comments = 0,
     this.isPublished = false,
     this.tags = "",
-    this.parts = const [],
+    required this.parts,
   });
 }
 
 final List<Book> booksPublished = [
   Book(
-      
       author: '',
       title: 'Skelaton man',
       image: 'assets/book7.png',
@@ -80,81 +84,87 @@ In the end, the mask was not merely a physical object but a key to unlocking the
       author: '',
       title: 'Ekko',
       image: 'assets/book8.png',
-      description: 'hi'),
+      description: 'hi',
+      parts: p),
   Book(
       author: '',
       title: 'Love JacaRanda',
       image: 'assets/book9.png',
-      description: 'hi'),
+      description: 'hi',
+      parts: p),
   Book(
       author: '',
       title: 'Remarkables',
       image: 'assets/book10.png',
-      description: 'hi'),
+      description: 'hi',
+      parts: p),
 ];
 final List<Book> booksNotPublished = [
   Book(
       author: '',
       title: 'Scavangers',
       image: 'assets/book5.png',
-      description: 'hi'),
+      description: 'hi',
+      parts: p),
   Book(
       author: '',
       title: 'Alone',
       image: 'assets/book6.png',
-      description: 'hi'),
+      description: 'hi',
+      parts: p),
 ];
 final List<Book> books = [
   Book(
-    parts: parts,
+      parts: parts,
       author: 'Hanna Joe',
       title: 'This is not a Ghost story',
       image: 'assets/book2.png',
       description: 'hi'),
   Book(
-    parts: parts,
+      parts: parts,
       author: '',
       title: 'Lost',
       image: 'assets/book3.png',
       description: 'hi'),
   Book(
-    parts: parts,
+      parts: parts,
       author: '',
       title: 'AbraCadabra',
       image: 'assets/book4.png',
       description: 'hi'),
   Book(
-    parts: parts,
+      parts: parts,
       author: '',
       title: 'Skelaton man',
       image: 'assets/book7.png',
       description: 'hi'),
   Book(
-    parts: parts,
+      parts: parts,
       author: '',
       title: 'Ekko',
       image: 'assets/book8.png',
       description: 'hi'),
   Book(
-    parts: parts,
-    title: 'Love JacaRanda',
+      parts: parts,
+      title: 'Love JacaRanda',
       author: '',
       image: 'assets/book9.png',
       description: 'hi'),
   Book(
-    parts: parts,
+      parts: parts,
       author: '',
       title: 'Remarkables',
       image: 'assets/book10.png',
       description: 'hi'),
   Book(
     parts: parts,
-      author: '',
-      title: 'Scavangers',
-      image: 'assets/book5.png',
-      description: 'hi'),
+    author: '',
+    title: 'Scavangers',
+    image: 'assets/book5.png',
+    description: 'hi',
+  ),
   Book(
-    parts: parts,
+      parts: parts,
       author: '',
       title: 'Alone',
       image: 'assets/book6.png',
@@ -170,4 +180,3 @@ class Part {
     required this.content,
   });
 }
-

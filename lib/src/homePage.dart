@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
             margin: EdgeInsets.all(8),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: books.length,
+              itemCount: 1,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {

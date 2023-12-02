@@ -47,7 +47,7 @@ class _SearchPageState extends State<SearchScreen> {
             ),
             SizedBox(height: 8),
             Container(
-              height: 450,
+              height: 400,
               child: Center(
                 child: GridView.builder(
                   scrollDirection: Axis.horizontal,

@@ -4,12 +4,19 @@ import 'package:project/src/bookDetailScreen.dart';
 import 'package:project/src/authorProfile.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
+import 'package:project/class/blocked.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/bookCard.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Profile a;
+    for (a in authors) {
+      if (blocked.contains(a)) {
+        authors.remove(a);
+      }
+    }
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(

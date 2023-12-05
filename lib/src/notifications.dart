@@ -1,29 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:project/class/notificationClass.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
-
-class Message {
-  final String title;
-  final String content;
-
-  Message({
-    required this.title,
-    required this.content,
-  });
-}
-
-List<Message> messages = [
-  Message(title: 'Welcome', content: 'Hello, welcome to the app!'),
-  // Add more messages as needed
-];
-
+import 'package:project/class/messageClass.dart';
 
 class NotificationScreenState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications',style:TextStyle(color: Colors.white)),
+        title: Text('Notifications', style: TextStyle(color: Colors.white)),
         backgroundColor: myColor,
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -33,6 +19,7 @@ class NotificationScreenState extends StatelessWidget {
 }
 
 class CustomRectangularButton2 extends StatefulWidget {
+  Profile me = authors[0];
   @override
   _CustomRectangularButtonState2 createState() =>
       _CustomRectangularButtonState2();
@@ -49,9 +36,18 @@ class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
 
   @override
   Widget build(BuildContext context) {
+    List<Message> myMessage = [];
+    Message m;
+    for (m in messages) {
+      if (m.reciever == widget.me) {
+        myMessage.add(m);
+      }
+    }
     return Column(
       children: [
-        SizedBox(height: 40,),
+        SizedBox(
+          height: 40,
+        ),
         Container(
           height: 50.0,
           decoration: BoxDecoration(
@@ -70,11 +66,11 @@ class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
             scrollDirection: Axis.vertical,
             itemCount: selectedOption == 'Notifications'
                 ? notifications.length
-                : messages.length,
+                : myMessage.length,
             itemBuilder: (context, index) {
               return selectedOption == 'Notifications'
                   ? buildNotificationTile(notifications[index])
-                  : buildMessageTile(messages[index]);
+                  : buildMessageTile(myMessage[index]);
             },
           ),
         ),
@@ -110,7 +106,8 @@ class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
               color: Colors.white,
             ),
           ),
-          subtitle: Text(notification.subtitle,style:TextStyle(color:Colors.white)),
+          subtitle: Text(notification.subtitle,
+              style: TextStyle(color: Colors.white)),
           leading: Container(
             padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
@@ -164,13 +161,13 @@ class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
           title: Text(
-            message.title,
+            message.sender.name,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-          subtitle: Text(message.content,style:TextStyle(color: Colors.white)),
+          subtitle: Text(message.text, style: TextStyle(color: Colors.white)),
           leading: Container(
             padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(

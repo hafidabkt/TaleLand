@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:project/class/blocked.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/widgets/widgets.dart';
-class AuthorProfileDetailsScreen extends StatelessWidget {
+
+class AuthorProfileDetailsScreen extends StatefulWidget {
   final Profile author;
+  const AuthorProfileDetailsScreen({required this.author});
 
-  AuthorProfileDetailsScreen({required this.author});
+  @override
+  _AuthorProfileDetailsScreen createState() => _AuthorProfileDetailsScreen();
+}
 
+class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
+  bool isFollowed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +45,7 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
             ],
           ),
         ],
-        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -56,8 +63,7 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                           padding: EdgeInsets.only(top: 20),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage:
-                                AssetImage(author.imageUrl),
+                            backgroundImage: AssetImage(widget.author.imageUrl),
                           ),
                         )
                       ],
@@ -65,7 +71,7 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                     Padding(
                         padding: EdgeInsets.all(20.0),
                         child: Text(
-                          author.name,
+                          widget.author.name,
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w500),
                         )),
@@ -75,7 +81,7 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                             '${author.followers}',
+                              '${widget.author.followers}',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w500),
                             ),
@@ -94,7 +100,7 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                              '${author.published}',
+                              '${widget.author.published}',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w500),
                             ),
@@ -113,7 +119,7 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                              '${author.bookList}',
+                              '${widget.author.bookList}',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w500),
                             ),
@@ -122,7 +128,8 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                             ),
                             Text(
                               "reading list",
-                              style: TextStyle(fontSize: 15, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.grey),
                             ),
                           ],
                         ),
@@ -138,9 +145,13 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(29),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                isFollowed = !isFollowed;
+                              });
+                            },
                             child: Text(
-                              "Follow",
+                              isFollowed ? "UnFollow" : "Follow",
                               style:
                                   TextStyle(fontSize: 15, color: Colors.white),
                             ),
@@ -171,7 +182,7 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(12),
                 child: Text(
-                  '''${author.bio}''',
+                  '''${widget.author.bio}''',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                 ),
               ),
@@ -186,7 +197,8 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
                       'Reading list >',
-                      style: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.white),
                     )),
               ),
             ),
@@ -208,7 +220,8 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
                       'Published Stories >',
-                      style: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.white),
                     )),
               ),
             ),
@@ -230,7 +243,8 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
                       'Reacomandation list >',
-                      style: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.white),
                     )),
               ),
             ),
@@ -249,8 +263,8 @@ class AuthorProfileDetailsScreen extends StatelessWidget {
   }
 
   void _blockUser(BuildContext context) {
-    // Placeholder logic for blocking a user
-    // Replace this with your actual logic for blocking a user
-    print('Blocking user...');
+    setState(() {
+      blocked.add(widget.author);
+    });
   }
 }

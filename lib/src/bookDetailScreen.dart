@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:project/class/bookClass.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/readingEditor.dart';
+import 'package:project/src/authorProfile.dart';
 
-class BookDetailsScreen extends StatefulWidget{
+class BookDetailsScreen extends StatefulWidget {
   final Book book;
 
   BookDetailsScreen({required this.book});
@@ -63,12 +65,22 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: AssetImage('assets/profile_picture.png'),
+                    backgroundImage: AssetImage(widget.book.author.imageUrl),
                   ),
                   SizedBox(width: 8),
-                  Text(
-                    '${widget.book.author}',
-                    style: TextStyle(fontSize: 20, color: Colors.grey),
+                  TextButton(
+                    child: Text(
+                      '${widget.book.author.name}',
+                      style: TextStyle(fontSize: 20, color: Colors.grey),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AuthorProfileDetailsScreen(author: widget.book.author),
+                        ),
+                      );
+                    },
                   ),
                 ]),
               ),
@@ -80,37 +92,38 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                   right: 50,
                   top: 18,
                 ),
-                child:
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(children: [
-                    Icon(Icons.visibility,color:myAccent),
-                    SizedBox(
-                        width: 8,
-                      ),
-                    Text('${widget.book.views}'),
-                  ],),
-                  Row(
-                    children: [
-                      Icon(Icons.favorite,color: myAccent),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('${widget.book.likes}'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.mode_comment,color:myAccent),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text('${widget.book.comments}')
-                    ],
-                  ),
-                ],
-              ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.visibility, color: myAccent),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text('${widget.book.views}'),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.favorite, color: myAccent),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text('${widget.book.likes}'),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.mode_comment, color: myAccent),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text('${widget.book.comments}')
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -146,24 +159,23 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                   ),
                   IconButton(
                       onPressed: () {},
-                      icon: Icon(Icons.add_circle,
-                          size: 40, color: myAccent)),
-                          IconButton(
-                            icon: Icon(
-                              widget.book.isLiked
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: widget.book.isLiked ? myAccent: null,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                widget.book.isLiked = !widget.book.isLiked;
-                                if (widget.book.isLiked) {
-                                  widget.book.likes++;
-                                }
-                              });
-                            },
-                          ),
+                      icon: Icon(Icons.add_circle, size: 40, color: myAccent)),
+                  IconButton(
+                    icon: Icon(
+                      widget.book.isLiked
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: widget.book.isLiked ? myAccent : null,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        widget.book.isLiked = !widget.book.isLiked;
+                        if (widget.book.isLiked) {
+                          widget.book.likes++;
+                        }
+                      });
+                    },
+                  ),
                 ],
               ),
               SizedBox(height: 8),

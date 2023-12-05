@@ -47,7 +47,7 @@ class _BookCardState extends State<BookCard> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Author: ${widget.book.author}',
+                        'Author: ${widget.book.author.name}',
                         style: TextStyle(
                             fontSize: 16,
                             color: const Color.fromARGB(255, 48, 17, 17)),

@@ -3,13 +3,15 @@ import 'package:project/src/color.dart';
 import 'package:project/src/resetPassword.dart';
 import 'package:project/src/nameReset.dart';
 import 'package:project/src/theme.dart';
+import 'package:project/src/blockedListScreen.dart';
 class ProfileSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: myAccent,
-        title: Text('Profile Settings'),
+        title: Text('Profile Settings',style: TextStyle(color: Colors.white),),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),
@@ -55,6 +57,15 @@ class ProfileSettingsScreen extends StatelessWidget {
             () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ThemeScreen()));
+            },
+           ),
+           buildSettingOption(
+            context,
+            'Blocked List',
+            Icons.person_off,
+            () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => blockedListScreen()));
             },
            )
         ],

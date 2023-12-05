@@ -1,3 +1,6 @@
+import 'profileClass.dart';
+
+
 Part temp = Part(title: 'I do not understand', content: '''
 Once upon a time in the heart of a mystical forest, a peculiar mask went missing. The mask, a whimsical creation resembling a mischievous cat's face, had long been a symbol of enchantment and mystery. It was said that whoever possessed the mask would be granted the ability to traverse between the seen and the unseen.
 
@@ -26,7 +29,7 @@ class Book {
   String title;
   String image;
   String description;
-  String author;
+  Profile author;
   bool isPublished;
   bool isLiked;
   int rating;
@@ -57,7 +60,7 @@ class Book {
 
 final List<Book> booksPublished = [
   Book(
-      author: '',
+      author: authors[0],
       title: 'Skelaton man',
       image: 'assets/book7.png',
       description: 'hi',
@@ -81,19 +84,19 @@ In the end, the mask was not merely a physical object but a key to unlocking the
         Part(title: 'Was it a Mistake', content: 'hi')
       ]),
   Book(
-      author: '',
+      author: authors[1],
       title: 'Ekko',
       image: 'assets/book8.png',
       description: 'hi',
       parts: p),
   Book(
-      author: '',
+      author: authors[2],
       title: 'Love JacaRanda',
       image: 'assets/book9.png',
       description: 'hi',
       parts: p),
   Book(
-      author: '',
+      author: authors[3],
       title: 'Remarkables',
       image: 'assets/book10.png',
       description: 'hi',
@@ -101,13 +104,13 @@ In the end, the mask was not merely a physical object but a key to unlocking the
 ];
 final List<Book> booksNotPublished = [
   Book(
-      author: '',
+      author: authors[0],
       title: 'Scavangers',
       image: 'assets/book5.png',
       description: 'hi',
       parts: p),
   Book(
-      author: '',
+      author: authors[1],
       title: 'Alone',
       image: 'assets/book6.png',
       description: 'hi',
@@ -116,56 +119,56 @@ final List<Book> booksNotPublished = [
 final List<Book> books = [
   Book(
       parts: parts,
-      author: 'Hanna Joe',
+      author: authors[2],
       title: 'This is not a Ghost story',
       image: 'assets/book2.png',
       description: 'hi'),
   Book(
       parts: parts,
-      author: '',
+      author: authors[3],
       title: 'Lost',
       image: 'assets/book3.png',
       description: 'hi'),
   Book(
       parts: parts,
-      author: '',
+      author: authors[1],
       title: 'AbraCadabra',
       image: 'assets/book4.png',
       description: 'hi'),
   Book(
       parts: parts,
-      author: '',
+      author: authors[2],
       title: 'Skelaton man',
       image: 'assets/book7.png',
       description: 'hi'),
   Book(
       parts: parts,
-      author: '',
+      author: authors[2],
       title: 'Ekko',
       image: 'assets/book8.png',
       description: 'hi'),
   Book(
       parts: parts,
       title: 'Love JacaRanda',
-      author: '',
+      author: authors[1],
       image: 'assets/book9.png',
       description: 'hi'),
   Book(
       parts: parts,
-      author: '',
+      author: authors[2],
       title: 'Remarkables',
       image: 'assets/book10.png',
       description: 'hi'),
   Book(
     parts: parts,
-    author: '',
+    author: authors[3],
     title: 'Scavangers',
     image: 'assets/book5.png',
     description: 'hi',
   ),
   Book(
       parts: parts,
-      author: '',
+      author: authors[0],
       title: 'Alone',
       image: 'assets/book6.png',
       description: 'hi'),

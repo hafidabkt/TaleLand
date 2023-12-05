@@ -3,6 +3,7 @@ import 'package:project/src/color.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/class/categoryClass.dart';
 import 'package:project/class/bookClass.dart';
+import 'package:project/class/profileClass.dart';
 
 class CreateStory extends StatefulWidget {
   const CreateStory({Key? key}) : super(key: key);
@@ -236,7 +237,7 @@ class _CreateStoryState extends State<CreateStory> {
                     title: titleController.text,
                     image: 'assets/book1.png',
                     description: descriptionController.text,
-                    author: 'Jane Marie',
+                    author: authors[0],
                     tags: tagController.text,
                     parts: parts);
                 if (isPublic) {

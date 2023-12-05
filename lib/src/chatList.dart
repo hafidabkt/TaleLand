@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/chat.dart';
 import 'package:project/src/color.dart';
+import 'package:project/class/messageClass.dart';
 
 class ChatListScreen extends StatefulWidget {
   @override
@@ -36,6 +38,7 @@ class _ChatListScreenState extends State<ChatListScreen>
   }
 
   @override
+  Profile her = authors[1];
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -70,19 +73,9 @@ class _ChatListScreenState extends State<ChatListScreen>
               Expanded(
                 child: ListView(
                   children: [
-                    buildChatUserTile(context, 'Alone', 'The plot twist',
-                        '12:30 AM', false, 'assets/profile01.png'),
+                    buildChatUserTile(messages.last),
                     Divider(),
-                    buildChatUserTile(context, 'Scavangers', 'Love that part',
-                        '11:45 AM', true, 'assets/profile02.png'),
-                    Divider(),
-                    buildChatUserTile(
-                        context,
-                        'Skelaton man',
-                        'what happed to Janie',
-                        '11:30 AM',
-                        true,
-                        'assets/profile03.png'),
+                    
                   ],
                 ),
               ),
@@ -147,12 +140,7 @@ class _ChatListScreenState extends State<ChatListScreen>
   }
 
   Widget buildChatUserTile(
-    BuildContext context,
-    String userName,
-    String lastMessage,
-    String timestamp,
-    bool seen,
-    String image,
+    Message message
   ) {
     // You can add logic here to filter based on the selected filter (_selectedFilter)
     return ListTile(
@@ -161,16 +149,16 @@ class _ChatListScreenState extends State<ChatListScreen>
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(userName: userName, image: image),
+            builder: (context) => ChatScreen(),
           ),
         );
       },
       leading: CircleAvatar(
         radius: 30,
-        backgroundImage: AssetImage('${image}'), // Replace with actual image
+        backgroundImage: AssetImage('${her.imageUrl}'), // Replace with actual image
       ),
       title: Text(
-        userName,
+        her.name,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18.0,
@@ -178,16 +166,17 @@ class _ChatListScreenState extends State<ChatListScreen>
       ),
       subtitle: RichText(
         text: TextSpan(
-          text: lastMessage,
+          text: (her == message.sender) ?
+          message.text : 'You: ${message.text}',
           style: TextStyle(
-            fontWeight: seen ? FontWeight.normal : FontWeight.bold,
+            fontWeight: message.seen ? FontWeight.normal : FontWeight.bold,
             color: Colors.black,
             fontSize: 14.0,
           ),
         ),
       ),
       trailing: Text(
-        timestamp,
+        message.time,
         style: TextStyle(
           color: Colors.grey,
         ),

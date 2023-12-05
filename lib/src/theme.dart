@@ -16,7 +16,9 @@ class _ThemeScreenState extends State<ThemeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Theme Selector'),
+        backgroundColor: myAccent,
+        title: Text('Theme Selector',style: TextStyle(color: Colors.white),),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [

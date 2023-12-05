@@ -51,6 +51,5 @@ class _blockedListScreen extends State<blockedListScreen> {
       ),
       )
     );
-    ;
   }
 }

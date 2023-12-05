@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 import 'package:project/class/profileClass.dart';
 
 class Message {

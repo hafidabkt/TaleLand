@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:project/class/profileClass.dart';
-import 'package:project/src/homePage.dart';
+import 'package:project/main.dart';
 
-List<Profile> netProfiles(List<Profile> profiles) {
+List<Profile> netProfiles() {
   List<Profile> temp = [];
-  for (int i = 0; i < profiles.length; i++) {
-    if (!user.blockedList.contains(profiles[i].id)) {
-      temp.add(profiles[i]);
+  for (int i = 0; i < authors.length; i++) {
+    if (!user.blockedList.contains(authors[i].id)) {
+      temp.add(authors[i]);
     }
   }
   return temp;

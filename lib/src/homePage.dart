@@ -7,8 +7,9 @@ import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/bookCard.dart';
 import '../components/netProfiles.dart';
-final Profile user = authors[0];
+import 'package:project/components/netBooks.dart';
 
+List<Book> notPublished = [];
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -18,10 +19,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreen extends State<HomeScreen> {
   late List<Profile> popular;
+  late List<Book> forYou;
   @override
   void initState() {
     super.initState();
-    popular = netProfiles(authors);
+    popular = netProfiles();
+    forYou = Foryou();
   }
 
   Widget build(BuildContext context) {
@@ -94,7 +97,7 @@ class _HomeScreen extends State<HomeScreen> {
             margin: EdgeInsets.all(8),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: books.length,
+              itemCount: forYou.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -102,7 +105,7 @@ class _HomeScreen extends State<HomeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            BookDetailsScreen(book: books[index]),
+                            BookDetailsScreen(book: forYou[index]),
                       ),
                     );
                   },
@@ -175,4 +178,3 @@ class AuthorProfileCard extends StatelessWidget {
     );
   }
 }
-

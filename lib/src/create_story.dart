@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
+import 'package:project/src/homePage.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/class/categoryClass.dart';
 import 'package:project/class/bookClass.dart';
-import 'package:project/class/profileClass.dart';
-
+import 'package:project/main.dart';
 class CreateStory extends StatefulWidget {
   const CreateStory({Key? key}) : super(key: key);
 
@@ -14,6 +14,7 @@ class CreateStory extends StatefulWidget {
 
 class _CreateStoryState extends State<CreateStory> {
   late Category selectedCategory;
+  late int selectedCategoryId;
   bool isPublic = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -23,6 +24,7 @@ class _CreateStoryState extends State<CreateStory> {
   void initState() {
     super.initState();
     selectedCategory = categories[0];
+    selectedCategoryId = 0;
   }
 
   @override
@@ -155,6 +157,8 @@ class _CreateStoryState extends State<CreateStory> {
                               // Update the selected category when the user selects a new value
                               setState(() {
                                 selectedCategory = newValue;
+                                selectedCategoryId =
+                                    SelectedCategoryId(newValue);
                               });
                             }
                           },
@@ -234,16 +238,21 @@ class _CreateStoryState extends State<CreateStory> {
                   !descriptionController.text.isEmpty) {
                 List<Part> parts = [Part(content: '', title: '')];
                 Book temp = Book(
+                    category: selectedCategoryId,
                     title: titleController.text,
                     image: 'assets/book1.png',
                     description: descriptionController.text,
-                    author: authors[0],
+                    author: user,
                     tags: tagController.text,
                     parts: parts);
                 if (isPublic) {
-                  booksPublished.add(temp);
+                  books.add(temp);
+                  user.publishedBooks.add(temp.bookId);
+                  print(books.length);
                 } else {
-                  booksNotPublished.add(temp);
+                  notPublished
+                      .add(temp); // to think aout if saved on the app or localy
+                  user.notPublishedBooks.add(temp.bookId);
                 }
                 Navigator.push(
                   context,
@@ -268,5 +277,14 @@ class _CreateStoryState extends State<CreateStory> {
         ],
       ),
     );
+  }
+
+  int SelectedCategoryId(Category temp) {
+    for (int i = 0; i < categories.length; i++) {
+      if (categories[i] == temp) {
+        return i;
+      }
+    }
+    return -1;
   }
 }

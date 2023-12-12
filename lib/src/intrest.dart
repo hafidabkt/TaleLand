@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/categoryClass.dart';
 import 'package:project/main.dart';
+import 'package:project/src/homePage.dart';
+
+List<int> selected = [];
+
 class IntrestScreen extends StatefulWidget {
   final List<bool> isSleceted = [];
   @override
@@ -60,7 +64,9 @@ class _IntrestPageState extends State<IntrestScreen> {
             ElevatedButton(
               onPressed: canClick
                   ? () {
-                    Navigator.push(
+                      user.forYou = selected;
+                      print(user.forYou);
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => Myapplication()),
@@ -103,6 +109,11 @@ class _IntrestPageState extends State<IntrestScreen> {
             if (widget.isSleceted[i]) numberOfSelected = numberOfSelected - 1;
             if (!widget.isSleceted[i]) numberOfSelected = numberOfSelected + 1;
             widget.isSleceted[i] = !widget.isSleceted[i];
+            if (widget.isSleceted[i]) {
+              selected.add(i);
+            } else {
+              selected.remove(i);
+            }
             if (numberOfSelected >= 5) {
               canClick = true;
             } else {

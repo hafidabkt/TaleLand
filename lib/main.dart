@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/Home.dart';
-// import 'src/signup_screen.dart';
+import 'package:project/src/signup_screen.dart';
 
+Profile user = authors[0];
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: Myapplication());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SignUpScreen(),
+    );
   }
 }
 
-class Myapplication extends StatelessWidget {
+class Myapplication extends StatefulWidget {
+  @override
+  _MyapplicationState createState() => _MyapplicationState();
+}
+
+class _MyapplicationState extends State<Myapplication> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

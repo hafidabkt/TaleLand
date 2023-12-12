@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'bookList.dart';
 import 'package:project/src/color.dart';
-import 'package:project/src/homePage.dart';
+import 'package:project/main.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/notifications.dart';
 
@@ -85,7 +85,7 @@ class _Profile2State extends State<Profile2> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Text(
-                        "Besmala Bendif",
+                        user.name,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,

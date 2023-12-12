@@ -16,5 +16,3 @@ export 'info_text_feild.dart';
 export 'text_feild_edit.dart';
 
 export 'story_tile.dart';
-export 'dropdowninput.dart';
-export 'dateofbirthinput.dart';

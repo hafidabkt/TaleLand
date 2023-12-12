@@ -81,7 +81,7 @@ class WriteEditor extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Creare a new story",
+                    "Create a new story",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,

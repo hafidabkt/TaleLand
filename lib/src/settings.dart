@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/resetPassword.dart';
 import 'package:project/src/nameReset.dart';
+import 'package:project/src/screens.dart';
 import 'package:project/src/theme.dart';
 import 'package:project/src/blockedListScreen.dart';
+
 class ProfileSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: myAccent,
-        title: Text('Profile Settings',style: TextStyle(color: Colors.white),),
+        title: Text(
+          'Profile Settings',
+          style: TextStyle(color: Colors.white),
+        ),
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: ListView(
@@ -21,8 +26,8 @@ class ProfileSettingsScreen extends StatelessWidget {
             'Change Name',
             Icons.person,
             () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => nameReset()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => nameReset()));
             },
           ),
           buildSettingOption(
@@ -47,10 +52,13 @@ class ProfileSettingsScreen extends StatelessWidget {
             'Logout',
             Icons.exit_to_app,
             () {
-              // Implement your logout logic here
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              // Push the TargetScreen onto the navigation stack
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SignUpScreen()));
             },
           ),
-           buildSettingOption(
+          buildSettingOption(
             context,
             'Theme',
             Icons.color_lens,
@@ -58,8 +66,8 @@ class ProfileSettingsScreen extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ThemeScreen()));
             },
-           ),
-           buildSettingOption(
+          ),
+          buildSettingOption(
             context,
             'Blocked List',
             Icons.person_off,
@@ -67,7 +75,7 @@ class ProfileSettingsScreen extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => blockedListScreen()));
             },
-           )
+          )
         ],
       ),
     );

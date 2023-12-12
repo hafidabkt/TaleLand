@@ -3,9 +3,12 @@ import 'package:project/src/color.dart';
 import 'package:project/src/bookCard.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/editStory.dart';
+import 'package:project/components/netBooks.dart';
+import 'package:project/src/homePage.dart';
 
 class edit extends StatelessWidget {
   @override
+  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -24,8 +27,8 @@ class ListOfPublished extends StatefulWidget {
 }
 
 class _ListOfPublished extends State<ListOfPublished> {
+  List<Book> booksPublished  = BooksPublished();
   String selectedOption = 'Published';
-
   void selectOption(String option) {
     setState(() {
       selectedOption = option;
@@ -57,7 +60,7 @@ class _ListOfPublished extends State<ListOfPublished> {
             scrollDirection: Axis.vertical,
             itemCount: selectedOption == 'Published'
                 ? booksPublished.length
-                : booksNotPublished.length,
+                : notPublished.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                   onTap: () {
@@ -65,14 +68,14 @@ class _ListOfPublished extends State<ListOfPublished> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                           selectedOption == 'Published' ? EditStory(book: booksPublished[index],) : EditStory (book: booksNotPublished[index],)
+                           selectedOption == 'Published' ? EditStory(book: booksPublished[index],) : EditStory (book: notPublished[index],)
                       ),
                     );
                   },
                   child: Container(
                     child: selectedOption == 'Published'
                   ? BookCard(book: booksPublished[index])
-                  : BookCard(book: booksNotPublished[index])
+                  : BookCard(book: notPublished[index])
                   ),
                 );
               

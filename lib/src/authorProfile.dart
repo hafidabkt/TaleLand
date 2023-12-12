@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/profileClass.dart';
-import 'package:project/src/homePage.dart';
+import 'package:project/main.dart';
 import 'bookList.dart';
 
 class AuthorProfileDetailsScreen extends StatefulWidget {

@@ -4,15 +4,17 @@ import 'widgets.dart';
 
 
 class RoundedInputField extends StatelessWidget {
-  const RoundedInputField({Key? key, this.hintText, this.icon = Icons.person})
+  RoundedInputField({Key? key, this.hintText, this.icon = Icons.person})
       : super(key: key);
   final String? hintText;
   final IconData icon;
 
   @override
+  TextEditingController controller = TextEditingController();
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextFormField(
+        controller: controller,
         cursorColor: myBlueColor,
         decoration: InputDecoration(
             icon: Icon(

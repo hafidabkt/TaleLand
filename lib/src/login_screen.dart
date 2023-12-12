@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/main.dart';
 import 'package:project/src/color.dart';
 import 'package:project/components/components.dart';
@@ -6,13 +7,50 @@ import 'package:project/components/under_part.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/resetPassword.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    Future<void> login() async {
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:5000/login'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          'password': passwordController.text,
+          'email': emailController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('login successful');
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final Map<String, dynamic> me = responseData['user'];
+        for (int i = 0; i < authors.length; i++) {
+          if (authors[i].email == me['email']) {
+            user = authors[i];
+            print(i);
+          }
+        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Myapplication(),
+          ),
+        );
+      } else {
+        print('login failed: ${response.body}');
+      }
+    }
+
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -21,14 +59,14 @@ class LoginScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Stack(
               children: [
-                const Upside(
+                Upside(
                   imgUrl: "assets/login.png",
                 ),
                 const PageTitleBar(
                   title: 'WELCOME TO TaleLand',
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 320.0),
+                  padding: EdgeInsets.only(top: 320.0),
                   child: Container(
                     width: double.infinity,
                     decoration: const BoxDecoration(
@@ -59,20 +97,48 @@ class LoginScreen extends StatelessWidget {
                         Form(
                           child: Column(
                             children: [
-                              const RoundedInputField(
-                                  hintText: "Email", icon: Icons.email),
-                              const RoundedPasswordField(),
+                              TextFieldContainer(
+                                child: TextFormField(
+                                  controller: emailController,
+                                  cursorColor: myBlueColor,
+                                  decoration: InputDecoration(
+                                      icon: Icon(
+                                        Icons.email,
+                                        color: Colors.white,
+                                      ),
+                                      hintText: "Email",
+                                      hintStyle: const TextStyle(
+                                          fontFamily: 'OpenSans',
+                                          color: Colors.grey),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              TextFieldContainer(
+                                child: TextFormField(
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  cursorColor: myPinkColor,
+                                  decoration: const InputDecoration(
+                                      icon: Icon(
+                                        Icons.lock,
+                                        color: Colors.white,
+                                      ),
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(
+                                          fontFamily: 'OpenSans',
+                                          color: Colors.grey),
+                                      suffixIcon: Icon(
+                                        Icons.visibility,
+                                        color: myPinkColor,
+                                      ),
+                                      border: InputBorder.none),
+                                ),
+                              ),
                               switchListTile(),
                               RoundedButton(
-                                  text: 'LOGIN',
-                                  press: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Myapplication()),
-                                    );
-                                  }),
+                                text: 'LOGIN',
+                                press: login,
+                              ),
                               const SizedBox(
                                 height: 10,
                               ),
@@ -96,7 +162,7 @@ class LoginScreen extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                               ForgetPassword()));
+                                              ForgetPassword()));
                                 },
                                 child: Text(
                                   'Forgot password?',

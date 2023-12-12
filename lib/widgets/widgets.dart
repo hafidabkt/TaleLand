@@ -4,9 +4,6 @@ export 'rounded_input_field.dart';
 export 'rounded_password_field.dart';
 export 'rounded_button.dart';
 
-export 'horizentalList.dart';
-export 'hr2.dart';
-export 'hr3.dart';
 export 'hrlist_for_user.dart';
 export 'hrlist_for_user2.dart';
 export 'hrlist_for_user3.dart';

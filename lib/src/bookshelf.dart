@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/src/homePage.dart';
 import 'package:project/src/readingEditor.dart';
 import 'package:project/class/bookClass.dart';
 
@@ -8,25 +9,23 @@ class BookshelfScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.class_),
-          title: 
-          Text('BookShelf'),
-    
+        title: Text('BookShelf'),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            buildSection('Reading', books.sublist(0,3), context),
-            buildSection('To Read', books.sublist(3,5), context),
-            buildSection('Favorites', books.sublist(5,9), context),
+            buildSection('Reading', theBooks(user.readingList), context),
+            buildSection('To Read', theBooks(user.toReadList), context),
+            buildSection('Favorites', theBooks(user.favoriteBooks), context),
           ],
         ),
       ),
     );
   }
 
-  Widget buildSection(String title, List<Book> books, context) {
+  Widget buildSection(String title, List<Book> mylist, context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,7 +49,7 @@ class BookshelfScreen extends StatelessWidget {
           height: 300,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: books.length,
+            itemCount: mylist.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
@@ -58,7 +57,7 @@ class BookshelfScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => readerScreen(book: books[index]),
+                      builder: (context) => readerScreen(book: mylist[index]),
                     ),
                   );
                 },
@@ -70,7 +69,7 @@ class BookshelfScreen extends StatelessWidget {
                         child: Container(
                           margin: EdgeInsets.all(10.0),
                           child: Image.asset(
-                            books[index].image,
+                            mylist[index].image,
                             width: 150,
                             height: 200,
                             fit: BoxFit.cover,
@@ -79,7 +78,7 @@ class BookshelfScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        books[index].title,
+                        mylist[index].title,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -95,4 +94,17 @@ class BookshelfScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+List<Book> theBooks(List<int> listbook) {
+  List<Book> mylist = [];
+  for (int i = 0; i < listbook.length; i++) {
+    for (int j = 0; j < books.length; j++) {
+      if (books[j].bookId == listbook[i]) {
+        mylist.add(books[j]);
+      }
+    }
+  }
+  print(mylist);
+  return mylist;
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'bookList.dart';
 import 'package:project/src/color.dart';
+import 'package:project/src/homePage.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/notifications.dart';
 
@@ -96,7 +98,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              "32",
+                              user.followers,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -117,7 +119,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              "3",
+                              '${user.publishedBooks.length}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -138,7 +140,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              "10",
+                              '${user.readingList.length}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -179,32 +181,9 @@ class _Profile2State extends State<Profile2> {
               child: Padding(
                 padding: EdgeInsets.all(12),
                 child: Text(
-                  'Hello, I am a writer, and this is my profile. I hope you like it. Nice to meet you all ^^',
+                  '''user.bio''',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Container(
-                color: myBrownColor,
-                height: 40,
-                width: 400,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Text(
-                    'My Reading list >',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: double.infinity,
-                height: 200.0,
-                child: HorizontalImageListUser(),
               ),
             ),
             Padding(
@@ -227,7 +206,30 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: HorizontalImageListUser2(),
+                child: bookList(book: user.publishedBooks),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Container(
+                color: myBrownColor,
+                height: 40,
+                width: 400,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Text(
+                    'My not yet Published Stories >',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                width: double.infinity,
+                height: 200.0,
+                child: bookList(book: user.notPublishedBooks),
               ),
             ),
             Padding(
@@ -250,7 +252,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: HorizontalImageListUser3(),
+                child: bookList(book: user.recommendationList),
               ),
             ),
           ],

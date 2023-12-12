@@ -19,7 +19,7 @@ class NotificationScreenState extends StatelessWidget {
 }
 
 class CustomRectangularButton2 extends StatefulWidget {
-  Profile me = authors[0];
+  final Profile me = authors[0];
   @override
   _CustomRectangularButtonState2 createState() =>
       _CustomRectangularButtonState2();

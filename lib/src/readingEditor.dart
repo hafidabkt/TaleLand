@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/color.dart';
+import 'package:project/src/homePage.dart';
 
 class readerScreen extends StatefulWidget {
   final Book book;
@@ -12,6 +13,7 @@ class readerScreen extends StatefulWidget {
 class _readerScreen extends State<readerScreen> {
   bool isDarkMode = false;
   int pageIndex = 0;
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -54,6 +56,16 @@ class readerScreenhelper extends StatefulWidget {
 }
 
 class _readerScreenhelper extends State<readerScreenhelper> {
+  late bool saved; // Declare as late to initialize it in initState
+  late bool isLiked;
+  @override
+  void initState() {
+    super.initState();
+    saved = isSaved(widget.book.bookId); // Initialize saved in initState
+    isLiked = isliked(widget.book.bookId);
+    addToReadingList(widget.book.bookId);
+  }
+
   bool isBottomBarVisible = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -223,23 +235,34 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                 ),
                 IconButton(
                   icon: Icon(
-                    widget.book.saved ? Icons.bookmark : Icons.bookmark_border,
+                    saved ? Icons.bookmark : Icons.bookmark_border,
                     color: Colors.white,
                   ),
                   onPressed: () {
                     setState(() {
-                      widget.book.saved = !widget.book.saved;
+                      saved = !saved;
+                      if (saved) {
+                        user.readingList.add(widget.book.bookId);
+                      } else {
+                        user.readingList.remove(widget.book.bookId);
+                      }
+                      print(user.readingList);
                     });
                   },
                 ),
                 IconButton(
                   icon: Icon(
-                    widget.book.isLiked ? Icons.star : Icons.star_border,
+                    isLiked ? Icons.star : Icons.star_border,
                     color: Colors.white,
                   ),
-                  onPressed: (){
+                  onPressed: () {
                     setState(() {
-                      widget.book.isLiked = !widget.book.isLiked;
+                      isLiked = !isLiked;
+                      if (isLiked) {
+                        user.favoriteBooks.add(widget.book.bookId);
+                      } else {
+                        user.favoriteBooks.remove(widget.book.bookId);
+                      }
                     });
                   },
                 ),
@@ -248,7 +271,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     Icons.share_outlined,
                     color: Colors.white,
                   ),
-                  onPressed: (){
+                  onPressed: () {
                     // Handle share action
                   },
                 ),
@@ -266,7 +289,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     Icons.mode_comment,
                     color: Colors.white,
                   ),
-                  onPressed: (){
+                  onPressed: () {
                     _showCommentsPopup(); // Handle comment action
                   },
                 ),
@@ -275,7 +298,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     Icons.menu,
                     color: Colors.white,
                   ),
-                  onPressed:() {
+                  onPressed: () {
                     _scaffoldKey.currentState?.openDrawer(); // Open the drawer
                   },
                 ),
@@ -332,7 +355,6 @@ class MyDrawer extends StatelessWidget {
   final int num;
 
   MyDrawer({required this.book, required this.isDarkMode, required this.num});
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -376,4 +398,27 @@ class MyDrawer extends StatelessWidget {
       ),
     );
   }
+}
+
+bool isSaved(int id) {
+  if (user.readingList.contains(id) || user.toReadList.contains(id)) {
+    return true;
+  }
+  return false;
+}
+
+bool isliked(int id) {
+  if (user.favoriteBooks.contains(id)) {
+    return true;
+  }
+  return false;
+}
+
+void addToReadingList(int id) {
+  if (user.toReadList.contains(id)) {
+    user.toReadList.remove(id);
+  }
+  if(!user.readingList.contains(id)){
+    user.readingList.add(id);
+  } 
 }

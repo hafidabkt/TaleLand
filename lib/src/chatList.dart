@@ -36,9 +36,9 @@ class _ChatListScreenState extends State<ChatListScreen>
     // Start the animation when the screen is built
     _animationController.forward();
   }
-
-  @override
   Profile her = authors[1];
+  @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

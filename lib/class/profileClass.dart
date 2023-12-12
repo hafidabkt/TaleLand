@@ -1,4 +1,8 @@
+import 'package:flutter/foundation.dart';
+
 class Profile {
+  static int _nextId = 1; // Static variable to track the next available ID
+  final int id; // Unique ID for each profile
   final String name;
   final String imageUrl;
   String bio;
@@ -6,21 +10,127 @@ class Profile {
   String views;
   int bookList;
   int published;
+  List<int> publishedBooks; // List of book IDs published
+  List<int> readingList; // List of book IDs being read
+  List<int> toReadList; // List of book IDs to read
+  List<int> favoriteBooks; // List of favorite book IDs
+  List<int> notPublishedBooks; // List of book IDs not published
+  List<int> recommendationList; // List of book IDs recommended
+  List<int> followersList; // List of follower user IDs
+  List<int> followeesList; // List of followee user IDs
+  List<int> blockedList; // List of blocked user IDs
+  List<int> forYou; // List of category IDs
+
   Profile({
     required this.name,
     required this.imageUrl,
     this.bio = '',
-    this.followers = '224K',
-    this.views = '1.2M',
-    this.bookList = 16,
-    this.published = 7,
-  });
-}
+    this.followers = '0',
+    this.views = '0',
+    this.bookList = 0,
+    this.published = 0,
+    required this.forYou,
+    this.publishedBooks = const [],
+    this.readingList = const [],
+    this.favoriteBooks = const [],
+    this.followersList = const [],
+    this.followeesList = const [],
+    this.blockedList = const [],
+    this.notPublishedBooks = const [],
+    this.recommendationList = const [],
+    this.toReadList = const  [], // Change square brackets to curly braces here
+  }) : id = _nextId++; // Assign the next available ID and increment it
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'imageUrl': imageUrl,
+      'bio': bio,
+      'followers': followers,
+      'views': views,
+      'bookList': bookList,
+      'published': published,
+      'publishedBooks': publishedBooks,
+      'readingList': readingList,
+      'favoriteBooks': favoriteBooks,
+      'followersList': followersList,
+      'followeesList': followeesList,
+      'blockedList': blockedList,
+      'forYou': forYou,
+    };
+  }
+}
 List<Profile> authors = [
-  Profile(name: 'Jane Marie', imageUrl: 'assets/profile01.png',bio:'Hello i am a writer and this is my profile , i hope you like it, nice to meet you all ^^'),
-  Profile(name: 'Briana March', imageUrl: 'assets/profile02.png',bio:'Welcome to my craetive weirdos this is your space to get out of your skin into the world of Science fiction'),
-  Profile(name: 'Lucie Clarck', imageUrl: 'assets/profile03.png'),
-  Profile(name: 'James Arthur', imageUrl: 'assets/profile04.png'),
-  // Add more authors as needed
+  Profile(
+    name: 'Jane Marie',
+    imageUrl: 'assets/profile01.png',
+    bio:
+        'Hello, I am a writer, and this is my profile. I hope you like it. Nice to meet you all ^^',
+    followers: '120',
+    views: '500',
+    bookList: 15,
+    published: 7,
+    publishedBooks: [1, 2, 3],
+    readingList: [4, 5],
+    favoriteBooks: [6, 7],
+    followersList: [],
+    followeesList: [],
+    blockedList: [],
+    forYou: [1, 3],
+    toReadList: [],
+    recommendationList: [],
+  ),
+  Profile(
+    name: 'stef Clark',
+    imageUrl: 'assets/profile02.png',
+    bio:
+        'Hello, I am a writer, and this is my profile. I hope you like it. Nice to meet you all ^^',
+    followers: '120',
+    views: '500',
+    bookList: 15,
+    published: 7,
+    publishedBooks: [1, 2, 3],
+    readingList: [4, 5],
+    favoriteBooks: [6, 7],
+    followersList: [],
+    followeesList: [],
+    blockedList: [],
+    forYou: [1, 3],
+  ),
+  Profile(
+    name: 'Lora Foll',
+    imageUrl: 'assets/profile03.png',
+    bio:
+        'Hello, I am a writer, and this is my profile. I hope you like it. Nice to meet you all ^^',
+    followers: '120',
+    views: '500',
+    bookList: 15,
+    published: 7,
+    publishedBooks: [1, 2, 3],
+    readingList: [4, 5],
+    favoriteBooks: [6, 7],
+    followersList: [],
+    followeesList: [],
+    blockedList: [],
+    forYou: [1, 3],
+  ),
+  Profile(
+    name: 'James Bou',
+    imageUrl: 'assets/profile04.png',
+    bio:
+        'Hello, I am a writer, and this is my profile. I hope you like it. Nice to meet you all ^^',
+    followers: '120',
+    views: '500',
+    bookList: 15,
+    published: 7,
+    publishedBooks: [1, 2, 3],
+    readingList: [4, 5],
+    favoriteBooks: [6, 7],
+    followersList: [8, 9],
+    followeesList: [10, 11],
+    blockedList: [],
+    forYou: [1, 3],
+    recommendationList: [1],
+  ),
 ];

@@ -4,19 +4,27 @@ import 'package:project/src/bookDetailScreen.dart';
 import 'package:project/src/authorProfile.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
-import 'package:project/class/blocked.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/bookCard.dart';
+import '../components/netProfiles.dart';
+final Profile user = authors[0];
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
+  _HomeScreen createState() => _HomeScreen();
+}
+
+class _HomeScreen extends State<HomeScreen> {
+  late List<Profile> popular;
+  @override
+  void initState() {
+    super.initState();
+    popular = netProfiles(authors);
+  }
+
   Widget build(BuildContext context) {
-    Profile a;
-    for (a in authors) {
-      if (blocked.contains(a)) {
-        authors.remove(a);
-      }
-    }
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
@@ -67,9 +75,9 @@ class HomeScreen extends StatelessWidget {
             margin: EdgeInsets.only(bottom: 12, left: 25, top: 12, right: 20),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: authors.length,
+              itemCount: popular.length,
               itemBuilder: (context, index) {
-                return AuthorProfileCard(author: authors[index]);
+                return AuthorProfileCard(author: popular[index]);
               },
             ),
           ),
@@ -167,3 +175,4 @@ class AuthorProfileCard extends StatelessWidget {
     );
   }
 }
+

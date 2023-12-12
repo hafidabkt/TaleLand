@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/Home.dart';
-import 'src/signup_screen.dart';
+// import 'src/signup_screen.dart';
 
 void main() {
   runApp(MyApp());

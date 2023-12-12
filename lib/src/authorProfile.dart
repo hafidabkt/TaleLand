@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project/class/blocked.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/profileClass.dart';
-import 'package:project/widgets/widgets.dart';
+import 'package:project/src/homePage.dart';
+import 'bookList.dart';
 
 class AuthorProfileDetailsScreen extends StatefulWidget {
   final Profile author;
@@ -13,7 +13,13 @@ class AuthorProfileDetailsScreen extends StatefulWidget {
 }
 
 class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
-  bool isFollowed = false;
+  late bool isFollowed;
+  @override
+  void initState() {
+    super.initState();
+    isFollowed = isFollow(widget.author.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,9 +152,7 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
                           borderRadius: BorderRadius.circular(29),
                           child: ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                isFollowed = !isFollowed;
-                              });
+                              Follow(context);
                             },
                             child: Text(
                               isFollowed ? "UnFollow" : "Follow",
@@ -207,7 +211,7 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: HorizontalImageList(),
+                child: bookList(book: widget.author.readingList),
               ),
             ),
             Padding(
@@ -230,7 +234,7 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: HorizontalImageList2(),
+                child: bookList(book: widget.author.publishedBooks),
               ),
             ),
             Padding(
@@ -253,7 +257,7 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: HorizontalImageList3(),
+                child: bookList(book: widget.author.recommendationList),
               ),
             ),
           ],
@@ -264,7 +268,27 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
 
   void _blockUser(BuildContext context) {
     setState(() {
-      blocked.add(widget.author);
+      user.blockedList.add(widget.author.id);
+      print(user.blockedList);
     });
   }
+
+  void Follow(BuildContext context) {
+    setState(() {
+      isFollowed = !isFollowed;
+      if (isFollowed) {
+        user.followeesList.add(widget.author.id);
+      } else {
+        user.followeesList.remove(widget.author.id);
+      }
+      print(user.followeesList);
+    });
+  }
+}
+
+bool isFollow(int id) {
+  if (user.followeesList.contains(id)) {
+    return true;
+  }
+  return false;
 }

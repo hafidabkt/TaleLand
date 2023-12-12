@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/color.dart';
+import 'package:project/src/homePage.dart';
 import 'package:project/src/readingEditor.dart';
 import 'package:project/src/authorProfile.dart';
 
@@ -15,6 +16,15 @@ class BookDetailsScreen extends StatefulWidget {
 }
 
 class _BookDetailsScreen extends State<BookDetailsScreen> {
+  late bool saved; // Declare as late to initialize it in initState
+  late bool isLiked;
+  @override
+  void initState() {
+    super.initState();
+    saved = isSaved(widget.book.bookId); // Initialize saved in initState
+    isLiked = isliked(widget.book.bookId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +86,8 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AuthorProfileDetailsScreen(author: widget.book.author),
+                          builder: (context) => AuthorProfileDetailsScreen(
+                              author: widget.book.author),
                         ),
                       );
                     },
@@ -157,21 +168,34 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                     ),
                   ),
                   IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.add_circle, size: 40, color: myAccent)),
+                      onPressed: () {
+                        setState(() {
+                          saved = !saved;
+                          if (saved) {
+                            user.toReadList.add(widget.book.bookId);
+                          } else {
+                            user.toReadList.remove(widget.book.bookId);
+                          }
+                        });
+                      },
+                      icon: !saved
+                          ? Icon(Icons.add_circle, size: 40, color: myAccent)
+                          : Icon(Icons.remove_circle,
+                              size: 40, color: myAccent)),
                   IconButton(
                     icon: Icon(
-                      widget.book.isLiked
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: widget.book.isLiked ? myAccent : null,
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: isLiked ? myAccent : null,
                     ),
                     onPressed: () {
                       setState(() {
-                        widget.book.isLiked = !widget.book.isLiked;
-                        if (widget.book.isLiked) {
-                          widget.book.likes++;
+                        isLiked = !isLiked;
+                        if (isLiked) {
+                          user.favoriteBooks.add(widget.book.bookId);
+                        } else {
+                          user.favoriteBooks.remove(widget.book.bookId);
                         }
+                        print(user.favoriteBooks);
                       });
                     },
                   ),
@@ -200,4 +224,18 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
       ),
     );
   }
+}
+
+bool isSaved(int id) {
+  if (user.readingList.contains(id) || user.toReadList.contains(id)) {
+    return true;
+  }
+  return false;
+}
+
+bool isliked(int id) {
+  if (user.favoriteBooks.contains(id)) {
+    return true;
+  }
+  return false;
 }

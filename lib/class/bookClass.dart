@@ -54,52 +54,104 @@ class Book {
     this.tags = "",
     required this.parts,
   }) : bookId = ++_latestBookId;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'category': category,
+      'title': title,
+      'image': image,
+      'description': description,
+      'authorId': author.id, // Assuming the author field is a Profile object
+      'likes': likes,
+      'rating': rating,
+      'views': views,
+      'comments': comments,
+      'isPublished': isPublished ? 1 : 0,
+      'tags': tags,
+      'bookId': bookId,
+    };
+  }
+   Book.fromMap(Map<String, dynamic> map)
+      : category = map['category'],
+        title = map['title'],
+        image = map['image'],
+        description = map['description'],
+        author = map['author'], // You need to handle the author mapping
+        likes = map['likes'],
+        rating = map['rating'],
+        views = map['views'],
+        comments = map['comments'],
+        isPublished = map['isPublished'] == 1,
+        tags = map['tags'],
+        bookId = map['bookId'],
+        parts = (map['parts'] as List<dynamic>)
+            .map((partMap) => Part.fromMap(partMap))
+            .toList();
+    void setAuthorAndParts(Profile author, List<Part> parts) {
+    this.author = author;
+    this.parts = parts;
+  }
+  void printDetails() {
+    print('Book Details:');
+    print('Title: $title');
+    print('Category: $category');
+    print('Description: $description');
+    print('Likes: $likes');
+    print('Rating: $rating');
+    print('Views: $views');
+    print('Comments: $comments');
+    print('Published: ${isPublished ? 'Yes' : 'No'}');
+    print('Tags: $tags');
+    print('Book ID: $bookId');
+  }
 }
+
+
 List<Book> books = [
   Book(
-    category: 5,
+      category: 5,
       parts: parts,
       author: authors[2],
       title: 'This is not a Ghost story',
       image: 'assets/book2.png',
       description: 'hi'),
   Book(
-    category: 6,
+      category: 6,
       parts: parts,
       author: authors[3],
       title: 'Lost',
       image: 'assets/book3.png',
       description: 'hi'),
   Book(
-    category: 7,
+      category: 7,
       parts: parts,
       author: authors[1],
       title: 'AbraCadabra',
       image: 'assets/book4.png',
       description: 'hi'),
   Book(
-    category: 0,
+      category: 0,
       parts: parts,
       author: authors[2],
       title: 'Skelaton man',
       image: 'assets/book7.png',
       description: 'hi'),
   Book(
-    category: 0,
+      category: 0,
       parts: parts,
       author: authors[2],
       title: 'Ekko',
       image: 'assets/book8.png',
       description: 'hi'),
   Book(
-    category: 0,
+      category: 0,
       parts: parts,
       title: 'Love JacaRanda',
       author: authors[1],
       image: 'assets/book9.png',
       description: 'hi'),
   Book(
-    category: 5,
+      category: 5,
       parts: parts,
       author: authors[2],
       title: 'Remarkables',
@@ -114,7 +166,7 @@ List<Book> books = [
     description: 'hi',
   ),
   Book(
-    category: 3,
+      category: 3,
       parts: parts,
       author: authors[0],
       title: 'Alone',
@@ -130,4 +182,16 @@ class Part {
     required this.title,
     required this.content,
   });
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'content': content,
+    };
+  }
+  factory Part.fromMap(Map<String, dynamic> map) {
+    return Part(
+      title: map['title'],
+      content: map['content'],
+    );
+  }
 }

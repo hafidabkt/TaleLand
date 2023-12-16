@@ -56,14 +56,41 @@ class Profile {
       'bookList': bookList,
       'published': published,
       'gender': gender,
-      'publishedBooks': publishedBooks,
-      'readingList': readingList,
-      'favoriteBooks': favoriteBooks,
-      'followersList': followersList,
-      'followeesList': followeesList,
-      'blockedList': blockedList,
-      'forYou': forYou,
+      'publishedBooks': publishedBooks.join(','), // Convert List to comma-separated string
+      'readingList': readingList.join(','),
+      'toReadList': toReadList.join(','),
+      'favoriteBooks': favoriteBooks.join(','),
+      'notPublishedBooks': notPublishedBooks.join(','),
+      'recommendationList': recommendationList.join(','),
+      'followersList': followersList.join(','),
+      'followeesList': followeesList.join(','),
+      'blockedList': blockedList.join(','),
+      'forYou': forYou.join(','),
     };
+  }
+
+  factory Profile.fromMap(Map<String, dynamic> map) {
+    return Profile(
+      email: map['email'] ?? '',
+      name: map['name'],
+      imageUrl: map['imageUrl'],
+      bio: map['bio'],
+      followers: map['followers'],
+      views: map['views'],
+      bookList: map['bookList'],
+      published: map['published'],
+      gender: map['gender'],
+      publishedBooks: (map['publishedBooks'] as String).split(',').map((e) => int.parse(e)).toList(),
+      readingList: (map['readingList'] as String).split(',').map((e) => int.parse(e)).toList(),
+      toReadList: (map['toReadList'] as String).split(',').map((e) => int.parse(e)).toList(),
+      favoriteBooks: (map['favoriteBooks'] as String).split(',').map((e) => int.parse(e)).toList(),
+      notPublishedBooks: (map['notPublishedBooks'] as String).split(',').map((e) => int.parse(e)).toList(),
+      recommendationList: (map['recommendationList'] as String).split(',').map((e) => int.parse(e)).toList(),
+      followersList: (map['followersList'] as String).split(',').map((e) => int.parse(e)).toList(),
+      followeesList: (map['followeesList'] as String).split(',').map((e) => int.parse(e)).toList(),
+      blockedList: (map['blockedList'] as String).split(',').map((e) => int.parse(e)).toList(),
+      forYou: (map['forYou'] as String).split(',').map((e) => int.parse(e)).toList(),
+    );
   }
 }
 

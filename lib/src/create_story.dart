@@ -5,6 +5,7 @@ import 'package:project/src/screens.dart';
 import 'package:project/class/categoryClass.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/main.dart';
+
 class CreateStory extends StatefulWidget {
   const CreateStory({Key? key}) : super(key: key);
 
@@ -253,6 +254,7 @@ class _CreateStoryState extends State<CreateStory> {
                   notPublished
                       .add(temp); // to think aout if saved on the app or localy
                   user.notPublishedBooks.add(temp.bookId);
+                  print(user.notPublishedBooks);
                 }
                 Navigator.push(
                   context,

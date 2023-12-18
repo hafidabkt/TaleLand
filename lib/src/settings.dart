@@ -5,6 +5,7 @@ import 'package:project/src/nameReset.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/src/theme.dart';
 import 'package:project/src/blockedListScreen.dart';
+import 'package:project/src/following_list.dart';
 
 class ProfileSettingsScreen extends StatelessWidget {
   @override
@@ -47,7 +48,7 @@ class ProfileSettingsScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ForgetPassword()));
             },
           ),
-            buildSettingOption(
+          buildSettingOption(
             context,
             'Following list',
             Icons.list,

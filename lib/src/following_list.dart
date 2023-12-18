@@ -11,21 +11,6 @@ class MyFollowersScreen extends StatefulWidget {
 
 class _MyFollowersScreenState extends State<MyFollowersScreen> {
   List<int> visibleIndices = [0, 1, 2, 3]; // Initial list of visible indices
-  List<Profile> authors = [
-    Profile(
-        name: 'Jane Marie',
-        imageUrl: 'assets/profile01.png',
-        bio:
-            'Hello, I am a writer and this is my profile. I hope you like it. Nice to meet you all ^^'),
-    Profile(
-        name: 'Briana March',
-        imageUrl: 'assets/profile02.png',
-        bio:
-            'Welcome to my creative weirdos! This is your space to get out of your skin into the world of Science fiction'),
-    Profile(name: 'Lucie Clarck', imageUrl: 'assets/profile03.png'),
-    Profile(name: 'James Arthur', imageUrl: 'assets/profile04.png'),
-    // Add more authors as needed
-  ];
 
   @override
   Widget build(BuildContext context) {

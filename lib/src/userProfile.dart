@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project/src/homePage.dart';
+import 'bookList.dart';
 import 'package:project/src/color.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/notifications.dart';
@@ -6,6 +8,8 @@ import 'package:project/src/followers.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:project/class/bookClass.dart';
+import 'package:project/main.dart';
 
 class Profile2 extends StatefulWidget {
   Profile2({super.key});
@@ -115,7 +119,7 @@ class _Profile2State extends State<Profile2> {
                             radius: 50,
                             backgroundImage: _image != null
                                 ? FileImage(_image!) as ImageProvider<Object>?
-                                : AssetImage("assets/profile02.png"),
+                                : AssetImage(user.imageUrl),
                           ),
                         ),
                         Positioned(
@@ -266,7 +270,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: HorizontalImageListUser(),
+                child: bookList(bookies: books, book: user.publishedBooks),
               ),
             ),
             Padding(
@@ -289,7 +293,8 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: HorizontalImageListUser2(),
+                child: bookList(
+                    bookies: notPublished, book: user.notPublishedBooks),
               ),
             ),
             Padding(
@@ -312,7 +317,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: HorizontalImageListUser3(),
+                child: bookList(bookies: books, book: user.recommendationList),
               ),
             ),
           ],
@@ -321,4 +326,3 @@ class _Profile2State extends State<Profile2> {
     );
   }
 }
-

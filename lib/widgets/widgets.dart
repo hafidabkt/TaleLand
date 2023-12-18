@@ -4,9 +4,7 @@ export 'rounded_input_field.dart';
 export 'rounded_password_field.dart';
 export 'rounded_button.dart';
 
-export 'hrlist_for_user.dart';
-export 'hrlist_for_user2.dart';
-export 'hrlist_for_user3.dart';
+
 export 'rect.dart';
 export '../src/settings.dart';
 

@@ -114,6 +114,7 @@ List<Profile> authors = [
     forYou: [1, 3],
     toReadList: [],
     recommendationList: [],
+    notPublishedBooks: [],
   ),
   Profile(
     email: 'stefclark@email.com',

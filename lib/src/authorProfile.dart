@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/profileClass.dart';
+import 'package:project/class/bookClass.dart';
 import 'package:project/main.dart';
 import 'bookList.dart';
 
@@ -211,7 +212,7 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: bookList(book: widget.author.readingList),
+                child: bookList(bookies:books,book: widget.author.readingList),
               ),
             ),
             Padding(
@@ -234,7 +235,7 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: bookList(book: widget.author.publishedBooks),
+                child: bookList(bookies:books,book: widget.author.publishedBooks),
               ),
             ),
             Padding(
@@ -257,7 +258,7 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: bookList(book: widget.author.recommendationList),
+                child: bookList(bookies:books,book: widget.author.recommendationList),
               ),
             ),
           ],

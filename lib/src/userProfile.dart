@@ -8,6 +8,8 @@ import 'package:project/src/followers.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:project/class/bookClass.dart';
+import 'package:project/main.dart';
 
 class Profile2 extends StatefulWidget {
   Profile2({super.key});
@@ -268,7 +270,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(bookies:books,book: user.publishedBooks),
+                child: bookList(bookies: books, book: user.publishedBooks),
               ),
             ),
             Padding(
@@ -291,7 +293,8 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(bookies:notPublished,book: user.notPublishedBooks),
+                child: bookList(
+                    bookies: notPublished, book: user.notPublishedBooks),
               ),
             ),
             Padding(
@@ -314,7 +317,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(bookies:books,book: user.recommendationList),
+                child: bookList(bookies: books, book: user.recommendationList),
               ),
             ),
           ],
@@ -323,4 +326,3 @@ class _Profile2State extends State<Profile2> {
     );
   }
 }
-

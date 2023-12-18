@@ -47,6 +47,16 @@ class ProfileSettingsScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ForgetPassword()));
             },
           ),
+            buildSettingOption(
+            context,
+            'Following list',
+            Icons.list,
+            () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyFollowersScreen()));
+              // Implement your logout logic here
+            },
+          ),
           buildSettingOption(
             context,
             'Logout',

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:project/src/homePage.dart';
 import 'bookList.dart';
 import 'package:project/src/color.dart';
-import 'package:project/main.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/notifications.dart';
-import 'package:project/main.dart';
-import 'package:project/class/bookClass.dart';
+import 'package:project/src/followers.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile2 extends StatefulWidget {
   Profile2({super.key});
@@ -17,6 +18,41 @@ class Profile2 extends StatefulWidget {
 
 class _Profile2State extends State<Profile2> {
   String selectedOption = 'About';
+  File? _image;
+  void initState() {
+    super.initState();
+    _loadImageFromPrefs();
+  }
+
+  Future _loadImageFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('profileImagePath');
+
+    if (imagePath != null) {
+      setState(() {
+        _image = File(imagePath);
+      });
+    }
+  }
+
+  Future _saveImageToPrefs(String imagePath) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('profileImagePath', imagePath);
+  } // Variable to store the selected image
+
+  Future _getImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final imagePath = File(pickedFile.path).path;
+      await _saveImageToPrefs(imagePath);
+
+      setState(() {
+        _image = File(imagePath);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +75,7 @@ class _Profile2State extends State<Profile2> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NotificationScreenState()
-                ),
+                    builder: (context) => NotificationScreenState()),
               );
             },
           ),
@@ -80,7 +115,20 @@ class _Profile2State extends State<Profile2> {
                           padding: EdgeInsets.only(top: 20),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage: AssetImage(user.imageUrl),
+                            backgroundImage: _image != null
+                                ? FileImage(_image!) as ImageProvider<Object>?
+                                : AssetImage(user.imageUrl),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: -7,
+                          right: -5,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                            ),
+                            onPressed: _getImage,
                           ),
                         ),
                       ],
@@ -88,7 +136,7 @@ class _Profile2State extends State<Profile2> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Text(
-                        user.name,
+                        "Besmala Bendif",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -101,7 +149,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              user.followers,
+                              "32",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -110,11 +158,21 @@ class _Profile2State extends State<Profile2> {
                             const SizedBox(
                               height: 6,
                             ),
-                            Text(
-                              "Followers",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Followers(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Followers",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
                           ],
@@ -122,7 +180,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${user.publishedBooks.length}',
+                              "3",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -143,7 +201,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${user.readingList.length}',
+                              "10",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -154,7 +212,8 @@ class _Profile2State extends State<Profile2> {
                             ),
                             Text(
                               "reading list",
-                              style: TextStyle(fontSize: 15, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 15, color: Colors.grey),
                             ),
                           ],
                         ),
@@ -184,7 +243,7 @@ class _Profile2State extends State<Profile2> {
               child: Padding(
                 padding: EdgeInsets.all(12),
                 child: Text(
-                  '''user.bio''',
+                  'Hello, I am a writer, and this is my profile. I hope you like it. Nice to meet you all ^^',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                 ),
               ),
@@ -198,7 +257,7 @@ class _Profile2State extends State<Profile2> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
-                    'My Published Stories >',
+                    'My Reading list >',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -221,7 +280,7 @@ class _Profile2State extends State<Profile2> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
-                    'My not yet Published Stories >',
+                    'My Published Stories >',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -264,3 +323,4 @@ class _Profile2State extends State<Profile2> {
     );
   }
 }
+

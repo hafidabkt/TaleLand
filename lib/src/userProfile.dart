@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:project/src/homePage.dart';
 import 'bookList.dart';
 import 'package:project/src/color.dart';
 import 'package:project/main.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/notifications.dart';
+import 'package:project/main.dart';
+import 'package:project/class/bookClass.dart';
 
 class Profile2 extends StatefulWidget {
   Profile2({super.key});
@@ -77,7 +80,7 @@ class _Profile2State extends State<Profile2> {
                           padding: EdgeInsets.only(top: 20),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage: AssetImage("assets/profile02.png"),
+                            backgroundImage: AssetImage(user.imageUrl),
                           ),
                         ),
                       ],
@@ -206,7 +209,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(book: user.publishedBooks),
+                child: bookList(bookies:books,book: user.publishedBooks),
               ),
             ),
             Padding(
@@ -229,7 +232,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(book: user.notPublishedBooks),
+                child: bookList(bookies:notPublished,book: user.notPublishedBooks),
               ),
             ),
             Padding(
@@ -252,7 +255,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(book: user.recommendationList),
+                child: bookList(bookies:books,book: user.recommendationList),
               ),
             ),
           ],

@@ -37,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         String email, String password, String name, String gender) async {
       try {
         final client = Supabase.instance.client;
-        final response = await client.from('users').upsert([
+        final response = await client.from('profiles').upsert([
           {
             'email': emailController.text,
             'password': passwordController.text,
@@ -84,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
-        Profile user = Profile(
+        user = Profile(
           email: emailController.text,
           name: nameController.text,
           imageUrl: 'assets/profile01.png',
@@ -100,7 +100,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           readingList: [],
           recommendationList: [],
         );
-
         authors.add(user);
         if (signUpResponse.user != null) {
           // Call saveUserDataToDatabase function here
@@ -320,3 +319,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+

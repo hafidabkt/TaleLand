@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           try {
                                             // Check the custom 'users' table for the user's existence
                                             final userResponse = await supabase
-                                                .from('users')
+                                                .from('profiles')
                                                 .select(
                                                     'id, email, password, name') // Adjust columns as needed
                                                 .eq('email',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/chatList.dart';
 import 'package:project/src/bookshelf.dart';
@@ -16,6 +17,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
+
+  final Profile author = authors[0];
 
   // Define your pages here
   final List<Widget> _pages = [
@@ -142,6 +145,9 @@ class ChatPage extends StatelessWidget {
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Profile2();
+    return Profile2(
+      author: authors[authors.length - 1],
+    );
   }
 }
+

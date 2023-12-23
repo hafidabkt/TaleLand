@@ -10,9 +10,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/main.dart';
+import 'package:project/class/profileClass.dart';
 
 class Profile2 extends StatefulWidget {
-  Profile2({super.key});
+  final Profile author;
+  Profile2({required this.author});
 
   @override
   State<Profile2> createState() => _Profile2State();
@@ -138,7 +140,7 @@ class _Profile2State extends State<Profile2> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Text(
-                        user.name,
+                        widget.author.name,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -151,7 +153,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              user.followers,
+                              '${widget.author.followers}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -182,7 +184,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${user.publishedBooks.length}',
+                              '${widget.author.published}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -203,7 +205,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${user.readingList.length}',
+                              '${widget.author.bookList}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -326,3 +328,4 @@ class _Profile2State extends State<Profile2> {
     );
   }
 }
+

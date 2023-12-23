@@ -1,25 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/Home.dart';
 import 'package:project/src/signup_screen.dart';
-import 'dataBase/dataBaseHelper.dart'; // Replace with the actual path
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:project/class/profileClass.dart';
+
 
 Profile user = authors[0];
-void main() async {
-  // Initialize the database helper
-  // DatabaseHelper databaseHelper = DatabaseHelper();
-
-  // // Initialize the database
-  // await databaseHelper.initDatabase();
-
-  // // Call your database methods
-  // await databaseHelper.insertBook(books.first);
-  // await databaseHelper
-  //     .printBookDetails(1); // Replace 1 with the desired book ID
-
-  runApp(MyApp());
-}
 
 class MyApp extends StatelessWidget {
   @override
@@ -54,4 +41,8 @@ class Screen2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyHomePage();
   }
+}
+
+void main() {
+  runApp(MyApp());
 }

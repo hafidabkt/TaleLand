@@ -138,7 +138,7 @@ class _Profile2State extends State<Profile2> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Text(
-                        "Besmala Bendif",
+                        user.name,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -151,7 +151,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              "32",
+                              user.followers,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -182,7 +182,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              "3",
+                              '${user.publishedBooks.length}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -203,7 +203,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              "10",
+                              '${user.readingList.length}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -245,7 +245,7 @@ class _Profile2State extends State<Profile2> {
               child: Padding(
                 padding: EdgeInsets.all(12),
                 child: Text(
-                  'Hello, I am a writer, and this is my profile. I hope you like it. Nice to meet you all ^^',
+                  '''${user.bio}''',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/main.dart';
@@ -168,15 +169,11 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                     ),
                   ),
                   IconButton(
-                      onPressed: () {
+                      onPressed: () async {
                         setState(() {
                           saved = !saved;
-                          if (saved) {
-                            user.toReadList.add(widget.book.bookId);
-                          } else {
-                            user.toReadList.remove(widget.book.bookId);
-                          }
                         });
+                        saveButton(widget.book, saved);
                       },
                       icon: !saved
                           ? Icon(Icons.add_circle, size: 40, color: myAccent)
@@ -187,16 +184,11 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                       isLiked ? Icons.favorite : Icons.favorite_border,
                       color: isLiked ? myAccent : null,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         isLiked = !isLiked;
-                        if (isLiked) {
-                          user.favoriteBooks.add(widget.book.bookId);
-                        } else {
-                          user.favoriteBooks.remove(widget.book.bookId);
-                        }
-                        print(user.favoriteBooks);
                       });
+                      likeButton(widget.book, isLiked);
                     },
                   ),
                 ],

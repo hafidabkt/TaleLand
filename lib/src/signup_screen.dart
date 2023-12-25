@@ -5,12 +5,10 @@ import 'package:project/src/intrest.dart';
 import 'package:project/components/components.dart';
 import 'package:project/components/under_part.dart';
 import 'package:project/src/screens.dart';
-import 'package:project/utils/constant.dart';
+import 'package:project/utils/constant';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/color.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:project/main.dart';
 
@@ -65,8 +63,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             toReadList: [],
             readingList: [],
             recommendationList: [],
+            id: me['id']
           );
-          authors.add(user);
         } else {
           print('Failed to save user data: ${response.error!.message}');
         }
@@ -83,22 +81,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         final signUpResponse = await Supabase.instance.client.auth.signUp(
           email: emailController.text,
           password: passwordController.text,
-        );
-        user = Profile(
-          email: emailController.text,
-          name: nameController.text,
-          imageUrl: 'assets/profile01.png',
-          gender: gender,
-          publishedBooks: [],
-          notPublishedBooks: [],
-          favoriteBooks: [],
-          forYou: [],
-          blockedList: [],
-          followeesList: [],
-          followersList: [],
-          toReadList: [],
-          readingList: [],
-          recommendationList: [],
         );
         authors.add(user);
         if (signUpResponse.user != null) {

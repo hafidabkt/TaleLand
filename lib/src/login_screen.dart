@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/backend/backend.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/main.dart';
 import 'package:project/src/color.dart';
@@ -8,9 +9,7 @@ import 'package:project/src/screens.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/home.dart';
 import 'package:project/src/resetPassword.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:project/utils/constant.dart';
+import 'package:project/utils/constant';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -144,7 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 .eq('password',
                                                     passwordController.text)
                                                 .single();
-
+                                            user =
+                                                await getProfile(userResponse['id']);
                                             if (userResponse != null) {
                                               // User exists in the 'users' table, login is successful
                                               print('Login successful');

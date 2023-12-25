@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:project/backend/backend.dart';
 import 'package:project/src/bookDetailScreen.dart';
 import 'package:project/src/authorProfile.dart';
 import 'package:project/class/bookClass.dart';
@@ -10,6 +11,7 @@ import '../components/netProfiles.dart';
 import 'package:project/components/netBooks.dart';
 
 List<Book> notPublished = [];
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -52,8 +54,9 @@ class _HomeScreen extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
+                        
                         builder: (context) =>
-                            BookDetailsScreen(book: books[index]),
+                            BookDetailsScreen(book: books[0]),
                       ),
                     );
                   },

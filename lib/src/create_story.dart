@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/backend/backend.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/homePage.dart';
 import 'package:project/src/screens.dart';
@@ -233,40 +234,37 @@ class _CreateStoryState extends State<CreateStory> {
             ),
           ),
           TextButton(
-            onPressed: () {
-              if (!titleController.text.isEmpty &&
-                  !tagController.text.isEmpty &&
-                  !descriptionController.text.isEmpty) {
-                List<Part> parts = [Part(content: '', title: '')];
-                Book temp = Book(
-                    category: selectedCategoryId,
-                    title: titleController.text,
-                    image: 'assets/book1.png',
-                    description: descriptionController.text,
-                    author: user,
-                    tags: tagController.text,
-                    parts: parts);
-                if (isPublic) {
-                  books.add(temp);
-                  user.publishedBooks.add(temp.bookId);
-                  print(books.length);
-                } else {
-                  notPublished
-                      .add(temp); // to think aout if saved on the app or localy
-                  user.notPublishedBooks.add(temp.bookId);
-                  print(user.notPublishedBooks);
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WriteChapter(part: temp.parts[0]),
-                  ),
-                );
-                titleController.clear();
-                descriptionController.clear();
-                tagController.clear();
-              }
-            },
+            onPressed: () async {
+  try {
+    if (!titleController.text.isEmpty &&
+        !tagController.text.isEmpty &&
+        !descriptionController.text.isEmpty) {
+      Book temp = await createStory(
+        selectedCategoryId,
+        titleController.text,
+        descriptionController.text,
+        tagController.text,
+        isPublic,
+      );
+
+      setState(() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WriteChapter(part: temp.parts[0]),
+          ),
+        );
+        titleController.clear();
+        descriptionController.clear();
+        tagController.clear();
+      });
+    }
+  } catch (e) {
+    print('Error creating story: $e');
+    // Handle or log the error as needed
+  }
+},
+
             child: Text(
               'Next',
               style: TextStyle(

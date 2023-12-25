@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/bookClass.dart';
-
+import 'package:project/backend/backend.dart';
 class WriteChapter extends StatefulWidget {
   final Part part;
 
@@ -90,7 +90,12 @@ class _WriteChapterState extends State<WriteChapter> {
       actions: [
         TextButton(
           onPressed: () async {
-            await _publishChapter();
+            setState(() {
+              Navigator.pop(context);
+            });
+            widget.part.title = titleController.text;
+            widget.part.content = contentController.text;
+            await publishChapter(widget.part);
             Navigator.pop(context);
           },
           child: const Text(
@@ -104,14 +109,6 @@ class _WriteChapterState extends State<WriteChapter> {
         ),
       ],
     );
-  }
-
-  Future<void> _publishChapter() async {
-    setState(() {
-      widget.part.title = titleController.text;
-      widget.part.content = contentController.text;
-      Navigator.pop(context);
-    });
   }
 }
 

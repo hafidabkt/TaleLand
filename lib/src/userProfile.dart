@@ -140,7 +140,7 @@ class _Profile2State extends State<Profile2> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Text(
-                        widget.author.name,
+                        user.name,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -153,7 +153,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${widget.author.followers}',
+                              '${user.followers}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -184,7 +184,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${widget.author.published}',
+                              '${user.published}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -205,7 +205,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${widget.author.bookList}',
+                              '${user.bookList}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/main.dart';
@@ -11,6 +12,7 @@ class BookCard extends StatefulWidget {
   @override
   _BookCardState createState() => _BookCardState();
 }
+
 class _BookCardState extends State<BookCard> {
   late bool saved; // Declare as late to initialize it in initState
   late bool isLiked;
@@ -84,23 +86,18 @@ class _BookCardState extends State<BookCard> {
                       Row(
                         children: [
                           IconButton(
-                            icon: Icon(
-                              isLiked
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: isLiked ? myAccent : null,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                isLiked = !isLiked;
-                                if (isLiked) {
-                                  user.favoriteBooks.add(widget.book.bookId);
-                                } else {
-                                  user.favoriteBooks.remove(widget.book.bookId);
-                                }
-                              });
-                            },
-                          ),
+                              icon: Icon(
+                                isLiked
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: isLiked ? myAccent : null,
+                              ),
+                              onPressed: () async {
+                                setState(() {
+                                  isLiked = !isLiked;
+                                });
+                                likeButton(widget.book,isLiked);
+                              }),
                           SizedBox(
                             width: 8,
                           ),
@@ -134,16 +131,12 @@ class _BookCardState extends State<BookCard> {
             top: 0,
             right: 0,
             child: IconButton(
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
                   saved = !saved;
-                  if (saved) {
-                    user.toReadList.add(widget.book.bookId);
-                  } else {
-                    user.toReadList.remove(widget.book.bookId);
-                  }
                   print(user.toReadList);
                 });
+                saveButton(widget.book, saved);
               },
               icon: Icon(Icons.bookmarks),
               color: saved ? myAccent : Colors.grey,
@@ -161,6 +154,7 @@ bool isSaved(int id) {
   }
   return false;
 }
+
 bool isliked(int id) {
   if (user.favoriteBooks.contains(id)) {
     return true;

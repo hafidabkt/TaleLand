@@ -63,14 +63,14 @@ create table
   );
 
   create table
-  toReadList (
+  toreadlist (
     book_id int references Book (book_id) not null,
     profile_id int references profiles (id) not null,
     primary key (book_id, profile_id)
   );
 
   create table
-  recommendationList(
+  recommendationlist(
     book_id int references Book (book_id) not null,
     profile_id int references profiles (id) not null,
     primary key (book_id, profile_id)
@@ -336,3 +336,5 @@ VALUES(
   1,
   1
 );
+ALTER TABLE Part
+ADD COLUMN bookid INT;

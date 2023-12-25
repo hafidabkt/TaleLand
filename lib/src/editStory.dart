@@ -206,7 +206,7 @@ class _EditStoryState extends State<EditStory> {
                       ),
                       child: InkWell(
                         onTap: () {
-                          Part temp = Part(title: '', content: '');
+                          Part temp = Part(title: '', content: '',bookid:widget.book.bookId);
                           widget.book.parts.add(temp);
                           
                           Navigator.push(

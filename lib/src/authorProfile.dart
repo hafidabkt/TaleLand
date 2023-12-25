@@ -4,6 +4,7 @@ import 'package:project/class/profileClass.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/main.dart';
 import 'bookList.dart';
+import 'package:project/utils/constant';
 
 class AuthorProfileDetailsScreen extends StatefulWidget {
   final Profile author;
@@ -212,7 +213,8 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: bookList(bookies:books,book: widget.author.readingList),
+                child:
+                    bookList(bookies: books, book: widget.author.readingList),
               ),
             ),
             Padding(
@@ -235,7 +237,8 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: bookList(bookies:books,book: widget.author.publishedBooks),
+                child: bookList(
+                    bookies: books, book: widget.author.publishedBooks),
               ),
             ),
             Padding(
@@ -258,7 +261,8 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
               child: Container(
                 width: double.infinity, // Adjust the width as needed
                 height: 200.0, // Adjust the height as needed
-                child: bookList(bookies:books,book: widget.author.recommendationList),
+                child: bookList(
+                    bookies: books, book: widget.author.recommendationList),
               ),
             ),
           ],
@@ -267,29 +271,49 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
     );
   }
 
-  void _blockUser(BuildContext context) {
+  Future<void> _blockUser(BuildContext context) async {
     setState(() {
       user.blockedList.add(widget.author.id);
       print(user.blockedList);
     });
+    final response01 = await supabase.from('blockedlist').upsert([
+      {
+        'blocker_id': user.id,
+        'blocked_profile_id': widget.author.id,
+      },
+    ]);
+    final response02 = await supabase
+        .from('followings')
+        .delete()
+        .eq('followee_id', widget.author.id);
   }
 
-  void Follow(BuildContext context) {
+  Future<void> Follow(BuildContext context) async {
     setState(() {
       isFollowed = !isFollowed;
-      if (isFollowed) {
-        user.followeesList.add(widget.author.id);
-      } else {
-        user.followeesList.remove(widget.author.id);
-      }
-      print(user.followeesList);
     });
+    if (isFollowed) {
+      user.followeesList.add(widget.author.id);
+      final response = await supabase.from('followings').upsert([
+        {
+          'follower_id': user.id,
+          'followee_id': widget.author.id,
+        },
+      ]);
+    } else {
+      user.followeesList.remove(widget.author.id);
+      final response = await supabase
+          .from('followings')
+          .delete()
+          .eq('followee_id', widget.author.id);
+    }
+    print(user.followeesList);
   }
-}
 
-bool isFollow(int id) {
-  if (user.followeesList.contains(id)) {
-    return true;
+  bool isFollow(int id) {
+    if (user.followeesList.contains(id)) {
+      return true;
+    }
+    return false;
   }
-  return false;
 }

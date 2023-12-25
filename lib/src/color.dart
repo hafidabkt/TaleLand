@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 List<Color> Mypalet = [
-  
 ];
 Color firstColor = Color(0xFF3A405A);
 Color firstAccent = Color(0xFFFCB677);

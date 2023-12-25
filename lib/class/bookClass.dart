@@ -1,6 +1,8 @@
+import 'package:project/backend/backend.dart';
+
 import 'profileClass.dart';
 
-Part temp = Part(title: 'I do not understand', content: '''
+Part temp = Part(bookid: 1, title: 'I do not understand', content: ''',
   Once upon a time in the heart of a mystical forest, a peculiar mask went missing. The mask, a whimsical creation resembling a mischievous cat's face, had long been a symbol of enchantment and mystery. It was said that whoever possessed the mask would be granted the ability to traverse between the seen and the unseen.
 
   The mask was the creation of an ancient sorcerer who had long since disappeared, leaving behind only whispers of his magical legacy. Legends spoke of the mask's uncanny ability to reveal hidden realms and secret passages, and those who sought its powers were often drawn to the depths of the forest.
@@ -18,14 +20,17 @@ Part temp = Part(title: 'I do not understand', content: '''
 
 List<Part> parts = [
   temp,
-  Part(title: 'The Come Back', content: 'Love is a strong word you guys'),
-  Part(title: 'Was it a Mistake', content: 'hi'),
-  Part(title: 'Was it a Mistake', content: 'hi')
+  Part(
+      title: 'The Come Back',
+      content: 'Love is a strong word you guys',
+      bookid: 2),
+  Part(title: 'Was it a Mistake', content: 'hi', bookid: 2),
+  Part(title: 'Was it a Mistake', content: 'hi', bookid: 2)
 ];
-List<Part> p = [Part(title: 'First Part', content: '')];
+List<Part> p = [Part(title: 'First Part', content: '', bookid: 1)];
+List<Book> books = [];
 
 class Book {
-  static int _latestBookId = 0;
   int category;
   String title;
   String image;
@@ -41,6 +46,7 @@ class Book {
   List<Part> parts;
 
   Book({
+    required this.bookId,
     required this.category,
     required this.title,
     required this.image,
@@ -53,44 +59,8 @@ class Book {
     this.isPublished = false,
     this.tags = "",
     required this.parts,
-  }) : bookId = ++_latestBookId;
+  });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'category': category,
-      'title': title,
-      'image': image,
-      'description': description,
-      'authorId': author.id, // Assuming the author field is a Profile object
-      'likes': likes,
-      'rating': rating,
-      'views': views,
-      'comments': comments,
-      'isPublished': isPublished ? 1 : 0,
-      'tags': tags,
-      'bookId': bookId,
-    };
-  }
-   Book.fromMap(Map<String, dynamic> map)
-      : category = map['category'],
-        title = map['title'],
-        image = map['image'],
-        description = map['description'],
-        author = map['author'], // You need to handle the author mapping
-        likes = map['likes'],
-        rating = map['rating'],
-        views = map['views'],
-        comments = map['comments'],
-        isPublished = map['isPublished'] == 1,
-        tags = map['tags'],
-        bookId = map['bookId'],
-        parts = (map['parts'] as List<dynamic>)
-            .map((partMap) => Part.fromMap(partMap))
-            .toList();
-    void setAuthorAndParts(Profile author, List<Part> parts) {
-    this.author = author;
-    this.parts = parts;
-  }
   void printDetails() {
     print('Book Details:');
     print('Title: $title');
@@ -106,92 +76,20 @@ class Book {
   }
 }
 
-
-List<Book> books = [
-  Book(
-      category: 5,
-      parts: parts,
-      author: authors[2],
-      title: 'This is not a Ghost story',
-      image: 'assets/book2.png',
-      description: 'hi'),
-  Book(
-      category: 6,
-      parts: parts,
-      author: authors[3],
-      title: 'Lost',
-      image: 'assets/book3.png',
-      description: 'hi'),
-  Book(
-      category: 7,
-      parts: parts,
-      author: authors[1],
-      title: 'AbraCadabra',
-      image: 'assets/book4.png',
-      description: 'hi'),
-  Book(
-      category: 0,
-      parts: parts,
-      author: authors[2],
-      title: 'Skelaton man',
-      image: 'assets/book7.png',
-      description: 'hi'),
-  Book(
-      category: 0,
-      parts: parts,
-      author: authors[2],
-      title: 'Ekko',
-      image: 'assets/book8.png',
-      description: 'hi'),
-  Book(
-      category: 0,
-      parts: parts,
-      title: 'Love JacaRanda',
-      author: authors[1],
-      image: 'assets/book9.png',
-      description: 'hi'),
-  Book(
-      category: 5,
-      parts: parts,
-      author: authors[2],
-      title: 'Remarkables',
-      image: 'assets/book10.png',
-      description: 'hi'),
-  Book(
-    category: 6,
-    parts: parts,
-    author: authors[3],
-    title: 'Scavangers',
-    image: 'assets/book5.png',
-    description: 'hi',
-  ),
-  Book(
-      category: 3,
-      parts: parts,
-      author: authors[0],
-      title: 'Alone',
-      image: 'assets/book6.png',
-      description: 'hi'),
-];
-
 class Part {
   String title;
   String content;
+  int bookid;
 
   Part({
     required this.title,
     required this.content,
+    required this.bookid,
   });
   Map<String, dynamic> toMap() {
     return {
       'title': title,
       'content': content,
     };
-  }
-  factory Part.fromMap(Map<String, dynamic> map) {
-    return Part(
-      title: map['title'],
-      content: map['content'],
-    );
   }
 }

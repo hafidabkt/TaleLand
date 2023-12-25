@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/class/profileClass.dart';
 import 'color.dart';
 import 'package:project/main.dart';
+import 'package:project/utils/constant';
 
 class blockedListScreen extends StatefulWidget {
   @override
@@ -33,10 +34,14 @@ class _blockedListScreen extends State<blockedListScreen> {
                 ),
                 title: Text(profile.name),
                 trailing: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       user.blockedList.removeAt(index);
                     });
+                    final response02 = await supabase
+                    .from('blockedlist')
+                    .delete()
+                    .eq('blocked_profile_id', profile.id);
                   },
                   child: Text(
                     'Unblock',

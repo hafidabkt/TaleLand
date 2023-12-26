@@ -338,3 +338,13 @@ VALUES(
 );
 ALTER TABLE Part
 ADD COLUMN bookid INT;
+
+ALTER TABLE bookofthemonth
+ADD CONSTRAINT fk_book_id
+FOREIGN KEY (book_id)
+REFERENCES book(book_id);
+
+ALTER TABLE book
+ADD CONSTRAINT fk_category_id
+FOREIGN KEY (category)
+REFERENCES category(category_id);

@@ -473,7 +473,7 @@ packages:
     source: hosted
     version: "2.1.7"
   postgrest:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: postgrest
       sha256: "4ee1d32c00b7e915e757724072ec10f4859bda25f232edafce82071870c75bce"

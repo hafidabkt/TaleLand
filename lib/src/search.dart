@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:project/class/bookClass.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/categoryClass.dart';
+import 'package:project/backend/backend.dart';
+import 'package:project/src/filterdBooks.dart';
+import 'package:project/src/filterdProfiles.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -10,16 +15,36 @@ class SearchScreen extends StatefulWidget {
 class _SearchPageState extends State<SearchScreen> {
   String searchText = '';
   String selectedFilter = 'tag'; // Default filter
-
+  List<Book> filtered = [];
+  List<Profile> filteredProfiles = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.close, color: Colors.white),
         title: TextField(
-          onChanged: (value) {
-            setState(() {
+          onSubmitted: (value) async {
+            setState(() async {
               searchText = value;
+              if (selectedFilter == 'profile') {
+                filteredProfiles = await filterProfile(value);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        FilteredProfilesScreen(filteredProfiles: filteredProfiles),
+                  ),
+                );
+              } else {
+                filtered = await filterByValue(value, selectedFilter);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        FilteredBooksScreen(filtered: filtered),
+                  ),
+                );
+              }
             });
           },
           decoration: InputDecoration(
@@ -52,7 +77,7 @@ class _SearchPageState extends State<SearchScreen> {
                 child: GridView.builder(
                   scrollDirection: Axis.horizontal,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Set the number of columns
+                    crossAxisCount: 3,
                     crossAxisSpacing: 8.0,
                   ),
                   itemCount: categories.length,
@@ -102,13 +127,19 @@ class _SearchPageState extends State<SearchScreen> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(
-        onTap: () {
-          // Handle category press
+        onTap: () async {
           print('Category pressed: ${category.name}');
+          filtered = await filterByCategory(category.name);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FilteredBooksScreen(filtered: filtered),
+            ),
+          );
         },
         child: Container(
-          width: 120, // Set your preferred width
-          height: 160, // Set your preferred height
+          width: 120,
+          height: 160,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             image: DecorationImage(

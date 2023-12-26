@@ -1,14 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:project/backend/backend.dart';
 import 'package:project/src/bookDetailScreen.dart';
 import 'package:project/src/authorProfile.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/bookCard.dart';
-import '../components/netProfiles.dart';
-import 'package:project/components/netBooks.dart';
+
 
 List<Book> notPublished = [];
 
@@ -20,16 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  late List<Profile> popular;
-  late List<Book> forYou;
-  @override
-  void initState() {
-    super.initState();
-    popular = netProfiles();
-    forYou = Foryou();
-  }
-
   Widget build(BuildContext context) {
+    
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
@@ -47,21 +37,19 @@ class _HomeScreen extends State<HomeScreen> {
             margin: EdgeInsets.all(8),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 1,
+              itemCount: bookOftheMonth.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        
-                        builder: (context) =>
-                            BookDetailsScreen(book: books[0]),
+                        builder: (context) => BookDetailsScreen(book: bookOftheMonth[index]),
                       ),
                     );
                   },
                   child: Container(
-                    child: BookCard(book: books[index]),
+                    child: BookCard(book: bookOftheMonth[index]),
                   ),
                 );
               },

@@ -26,7 +26,6 @@ class bookList extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  // Navigate to book details screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(

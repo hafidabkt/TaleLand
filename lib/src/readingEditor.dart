@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/color.dart';
-import 'package:project/main.dart';
+import 'package:project/class/profileClass.dart';
 
 class readerScreen extends StatefulWidget {
   final Book book;

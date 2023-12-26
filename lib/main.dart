@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
+import 'package:project/components/netProfiles.dart';
 import 'package:project/src/Home.dart';
-import 'package:project/src/homePage.dart';
-import 'package:project/src/signup_screen.dart'; 
+import 'package:project/src/signup_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:get/get.dart';
 import 'package:supabase/supabase.dart';
-import 'package:project/utils/constant';
+import 'package:project/utils/constant.dart';
 import 'package:project/src/intrest.dart';
 
-Profile user = authors[0];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
       anonKey:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdGt3aWlucHdwdWt0dWt4ZWlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDI5MDExNDMsImV4cCI6MjAxODQ3NzE0M30.TEMqnlIWzX5kNEfYQcNVVdXXhOiai19ptn2e0GHICss',
       url: 'https://tptkwiinpwpuktukxeik.supabase.co');
-  
+  netProfiles();
+  getBookOftheMonth();
+  getAllBooks();
   runApp(MyApp());
 }
 

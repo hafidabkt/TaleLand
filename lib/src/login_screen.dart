@@ -9,7 +9,7 @@ import 'package:project/src/screens.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/home.dart';
 import 'package:project/src/resetPassword.dart';
-import 'package:project/utils/constant';
+import 'package:project/utils/constant.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);

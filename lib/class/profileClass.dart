@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 
+Profile user = authors[0];
+List<Profile> popular = [];
+
 class Profile {
   final int id; // Unique ID for each profile
   final String name;

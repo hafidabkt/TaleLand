@@ -1,5 +1,6 @@
 import 'package:project/class/bookClass.dart';
-import 'package:project/main.dart';
+import 'package:project/class/profileClass.dart';
+
 List<Book> BooksNotPublished() {
   List<Book> notpublished = [];
   for (int i = 0; i < books.length; i++) {

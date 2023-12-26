@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/backend/backend.dart';
+
 class WriteChapter extends StatefulWidget {
   final Part part;
-
-  const WriteChapter({required this.part});
+  final int partid;
+  const WriteChapter({required this.part,required this.partid});
 
   @override
   _WriteChapterState createState() => _WriteChapterState();
@@ -29,7 +30,7 @@ class _WriteChapterState extends State<WriteChapter> {
       appBar: buildAppBar(),
       bottomNavigationBar: const ChapterBottomBar(),
       body: SingleChildScrollView(
-        // Wrap your Column with SingleChildScrollView
+     
         child: Column(
           children: [
             Padding(
@@ -95,7 +96,7 @@ class _WriteChapterState extends State<WriteChapter> {
             });
             widget.part.title = titleController.text;
             widget.part.content = contentController.text;
-            await publishChapter(widget.part);
+            await publishChapter(widget.part,widget.partid);
             Navigator.pop(context);
           },
           child: const Text(

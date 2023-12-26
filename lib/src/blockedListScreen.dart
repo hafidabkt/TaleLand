@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/class/profileClass.dart';
 import 'color.dart';
 import 'package:project/main.dart';
-import 'package:project/utils/constant';
+import 'package:project/utils/constant.dart';
 
 class blockedListScreen extends StatefulWidget {
   @override

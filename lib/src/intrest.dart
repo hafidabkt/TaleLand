@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/categoryClass.dart';
 import 'package:project/main.dart';
-import 'package:project/src/homePage.dart';
+import 'package:project/class/profileClass.dart';
 
 List<int> selected = [];
 

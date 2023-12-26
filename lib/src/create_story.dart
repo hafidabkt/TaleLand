@@ -246,12 +246,11 @@ class _CreateStoryState extends State<CreateStory> {
         tagController.text,
         isPublic,
       );
-
       setState(() {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => WriteChapter(part: temp.parts[0]),
+            builder: (context) => WriteChapter(part: temp.parts[0],partid: -1,),
           ),
         );
         titleController.clear();

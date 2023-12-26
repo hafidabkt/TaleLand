@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/writingEditor.dart';
 import 'package:project/class/bookClass.dart';
+import 'package:project/backend/backend.dart';
 
 class ChaptersList extends StatelessWidget {
   final Book book;
@@ -28,11 +29,15 @@ class ChaptersList extends StatelessWidget {
               itemCount: book.parts.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    int partid = await getPartid(
+                        book.parts[index].title, book.parts[index].bookid);
+                    print(partid);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => WriteChapter(part:book.parts[index]),
+                        builder: (context) => WriteChapter(
+                            part: book.parts[index], partid: partid),
                       ),
                     );
                   },

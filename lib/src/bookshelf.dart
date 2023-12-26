@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/main.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/readingEditor.dart';
 import 'package:project/class/bookClass.dart';
 

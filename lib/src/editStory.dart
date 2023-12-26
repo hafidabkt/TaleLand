@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:project/src/color.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/class/bookClass.dart';
@@ -213,7 +214,7 @@ class _EditStoryState extends State<EditStory> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => WriteChapter(
-                                        part: widget.book.parts.last,
+                                        part: widget.book.parts.last,partid:-1
                                       )));
                         },
                         child: Center(

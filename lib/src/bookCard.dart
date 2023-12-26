@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
-import 'package:project/main.dart';
+
 
 class BookCard extends StatefulWidget {
   final Book book;
@@ -14,135 +15,134 @@ class BookCard extends StatefulWidget {
 }
 
 class _BookCardState extends State<BookCard> {
-  late bool saved; // Declare as late to initialize it in initState
+  late bool saved;
   late bool isLiked;
+
   @override
   void initState() {
     super.initState();
-    saved = isSaved(widget.book.bookId); // Initialize saved in initState
+    saved = isSaved(widget.book.bookId);
     isLiked = isliked(widget.book.bookId);
   }
 
   @override
   Widget build(BuildContext context) {
+    double cardWidth = MediaQuery.of(context).size.width - 40; // Adjust padding as needed
+
     return Card(
       elevation: 0,
       color: myBeige,
-      margin: EdgeInsets.only(bottom: 12, left: 25, top: 12, right: 20),
-      child: Stack(
-        children: [
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.all(10.0),
-                child: Image.asset(
-                  widget.book.image,
-                  width: 150,
-                  height: 230,
-                  fit: BoxFit.cover,
+      margin: EdgeInsets.only(bottom: 12, left: 20, top: 12, right: 20),
+      child: Container(
+        width: cardWidth,
+        child: Stack(
+          children: [
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    widget.book.image,
+                    width: 150,
+                    height: 230,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
+                Flexible(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         height: 60,
                       ),
                       Text(
-                        widget.book.title,
+                        '''${widget.book.title}''',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(height: 4),
                       Text(
                         'Author: ${widget.book.author.name}',
                         style: TextStyle(
-                            fontSize: 16,
-                            color: const Color.fromARGB(255, 48, 17, 17)),
+                          fontSize: 16,
+                          color: const Color.fromARGB(255, 48, 17, 17),
+                        ),
                       ),
                       SizedBox(height: 4),
                       Text(
-                        widget.book.description,
+                        '''${widget.book.description}''',
                         style: TextStyle(fontSize: 16),
-                        overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.visibility, color: myAccent),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('${widget.book.views}'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                              icon: Icon(
-                                isLiked
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isLiked ? myAccent : null,
-                              ),
-                              onPressed: () async {
-                                setState(() {
-                                  isLiked = !isLiked;
-                                });
-                                likeButton(widget.book,isLiked);
-                              }),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('${widget.book.likes}'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.mode_comment, color: myAccent),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('${widget.book.comments}')
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Text(
-                    widget.book.description,
-                    style: TextStyle(fontSize: 16, color: myBrownColor),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: IconButton(
-              onPressed: () async {
-                setState(() {
-                  saved = !saved;
-                  print(user.toReadList);
-                });
-                saveButton(widget.book, saved);
-              },
-              icon: Icon(Icons.bookmarks),
-              color: saved ? myAccent : Colors.grey,
+                ),
+              ],
             ),
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Positioned(
+              top: 0,
+              right: 0,
+              child: IconButton(
+                onPressed: () async {
+                  setState(() {
+                    saved = !saved;
+                  });
+                  saveButton(widget.book, saved);
+                },
+                icon: Icon(Icons.bookmarks),
+                color: saved ? myAccent : Colors.grey,
+              ),
+            ),
+                Row(
+                  children: [
+                    Icon(Icons.visibility, color: myAccent),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text('${widget.book.views}'),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? myAccent : null,
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                        likeButton(widget.book, isLiked);
+                      },
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text('${widget.book.likes}'),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.mode_comment, color: myAccent),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text('${widget.book.comments}')
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 12,
+            ),
+          ],
+        ),
       ),
     );
   }

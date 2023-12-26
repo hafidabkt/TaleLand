@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/intrest.dart';
 import 'package:project/components/components.dart';
 import 'package:project/components/under_part.dart';
 import 'package:project/src/screens.dart';
-import 'package:project/utils/constant';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/color.dart';
 import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:project/main.dart';
+import 'package:project/utils/constant.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -30,7 +28,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     TextEditingController passwordController = TextEditingController();
     TextEditingController emailController = TextEditingController();
     String gender = '';
-
     Future<void> saveUserDataToDatabase(
         String email, String password, String name, String gender) async {
       try {
@@ -49,22 +46,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
           final Map<String, dynamic> responseData = json.decode(response.body);
           final Map<String, dynamic> me = responseData['user'];
           user = Profile(
-            email: me['email'],
-            name: me['name'],
-            imageUrl: 'assets/profile01.png',
-            gender: me['gender'],
-            publishedBooks: [],
-            notPublishedBooks: [],
-            favoriteBooks: [],
-            forYou: [],
-            blockedList: [],
-            followeesList: [],
-            followersList: [],
-            toReadList: [],
-            readingList: [],
-            recommendationList: [],
-            id: me['id']
-          );
+              email: me['email'],
+              name: me['name'],
+              imageUrl: 'assets/profile01.png',
+              gender: me['gender'],
+              publishedBooks: [],
+              notPublishedBooks: [],
+              favoriteBooks: [],
+              forYou: [],
+              blockedList: [],
+              followeesList: [],
+              followersList: [],
+              toReadList: [],
+              readingList: [],
+              recommendationList: [],
+              id: me['id']);
         } else {
           print('Failed to save user data: ${response.error!.message}');
         }
@@ -301,4 +297,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-

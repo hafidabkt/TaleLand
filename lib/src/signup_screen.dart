@@ -8,7 +8,6 @@ import 'package:project/widgets/widgets.dart';
 import 'package:project/src/color.dart';
 import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:project/utils/constant.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -45,7 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           print('User data saved to the database!');
           final Map<String, dynamic> responseData = json.decode(response.body);
           final Map<String, dynamic> me = responseData['user'];
-          user = Profile(
+          final user = Profile(
               email: me['email'],
               name: me['name'],
               imageUrl: 'assets/profile01.png',
@@ -68,9 +67,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         print('Error during database operation: $error');
       }
     }
-
-    ;
-
     Future<void> signUp(
         String name, String email, String password, String gender) async {
       try {
@@ -78,7 +74,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
-        authors.add(user);
         if (signUpResponse.user != null) {
           // Call saveUserDataToDatabase function here
           await saveUserDataToDatabase(

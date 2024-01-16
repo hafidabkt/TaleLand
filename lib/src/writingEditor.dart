@@ -6,7 +6,7 @@ import 'package:project/backend/backend.dart';
 class WriteChapter extends StatefulWidget {
   final Part part;
   final int partid;
-  const WriteChapter({required this.part,required this.partid});
+  const WriteChapter({required this.part, required this.partid});
 
   @override
   _WriteChapterState createState() => _WriteChapterState();
@@ -30,7 +30,6 @@ class _WriteChapterState extends State<WriteChapter> {
       appBar: buildAppBar(),
       bottomNavigationBar: const ChapterBottomBar(),
       body: SingleChildScrollView(
-     
         child: Column(
           children: [
             Padding(
@@ -96,7 +95,8 @@ class _WriteChapterState extends State<WriteChapter> {
             });
             widget.part.title = titleController.text;
             widget.part.content = contentController.text;
-            await publishChapter(widget.part,widget.partid);
+            int id = await publishChapter(widget.part, widget.partid);
+            await sendNotification(id);
             Navigator.pop(context);
           },
           child: const Text(

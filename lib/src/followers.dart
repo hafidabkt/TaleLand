@@ -1,16 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/authorProfile.dart';
 import 'package:project/class/profileClass.dart';
+import 'package:project/backend/backend.dart';
 
 class Followers extends StatefulWidget {
   @override
-  _FollowersScreenState createState() => _FollowersScreenState();
+  _MyFollowersScreenState createState() => _MyFollowersScreenState();
 }
 
-class _FollowersScreenState extends State<Followers> {
-  List<int> visibleIndices = [0, 1, 2, 3]; // Initial list of visible indices
+class _MyFollowersScreenState extends State<Followers> {
+  late Future<List<Profile>> followers;
+
+  // Use a Set to keep track of indices being unfollowed
+  Set<int> unfollowingIndices = Set<int>();
+
+  @override
+  void initState() {
+    super.initState();
+    followers = getFollowers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,7 @@ class _FollowersScreenState extends State<Followers> {
         ),
         backgroundColor: myColor,
         title: Text(
-          ' My Followers',
+          ' My Followers List',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'DancingScript',
@@ -36,58 +45,85 @@ class _FollowersScreenState extends State<Followers> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
-        child: ListView.builder(
-          itemCount: visibleIndices.length,
-          itemBuilder: (BuildContext context, int index) {
-            int authorIndex = visibleIndices[index];
-            String userName = authors[authorIndex].name;
+        child: FutureBuilder<List<Profile>>(
+          future: followers,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              List<Profile> followersList = snapshot.data ?? [];
 
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: ListTile(
-                title: GestureDetector(
-                  onTap: () {
-                    // Navigate to another page when title is tapped
-                    _navigateToUserProfile(authors[authorIndex]);
-                  },
-                  child: Text(
-                    userName,
-                    style: TextStyle(
-                      fontFamily: 'Jost',
-                      fontWeight: FontWeight.w600,
+              return ListView.builder(
+                itemCount: followersList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Profile follower = followersList[index];
+
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: ListTile(
+                      title: GestureDetector(
+                        onTap: () {
+                          _navigateToUserProfile(follower);
+                        },
+                        child: Text(
+                          follower.name,
+                          style: TextStyle(
+                            fontFamily: 'Jost',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      leading: GestureDetector(
+                        onTap: () {
+                          _navigateToUserProfile(follower);
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(follower.imageUrl),
+                          radius: 25,
+                        ),
+                      ),
+                      trailing: ElevatedButton(
+                        onPressed: unfollowingIndices.contains(index)
+                            ? null
+                            : () async {
+                                // Update the state to indicate unfollowing in progress
+                                setState(() {
+                                  unfollowingIndices.add(index);
+                                });
+
+                                // Perform the unfollow operation
+                                await dropFollower(follower.id, index);
+
+                                // Update the state to indicate unfollowing is done
+                                setState(() {
+                                  unfollowingIndices.remove(index);
+                                });
+
+                                // Close the dialog
+                                Navigator.pop(context);
+                              },
+                        style: ElevatedButton.styleFrom(
+                          primary: myColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                        ),
+                        child: Text(
+                          unfollowingIndices.contains(index) ? "Removing..." : "Remove",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Jost',
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                leading: GestureDetector(
-                  onTap: () {
-                    // Navigate to another page when avatar is tapped
-                    _navigateToUserProfile(authors[authorIndex]);
-                  },
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(authors[authorIndex]
-                        .imageUrl), // Use the image URL directly
-                    radius: 25,
-                  ),
-                ),
-                trailing: ElevatedButton(
-                  onPressed: () {
-                    // Show the unfollow dialog
-                    _showUnfollowDialog(context, userName, index);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: myColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                  ),
-                  child: Text(
-                    "remove",
-                    style: TextStyle(color: Colors.white, fontFamily: 'Jost'),
-                  ),
-                ),
-              ),
-            );
+                  );
+                },
+              );
+            }
           },
         ),
       ),
@@ -95,73 +131,11 @@ class _FollowersScreenState extends State<Followers> {
   }
 
   void _navigateToUserProfile(Profile p) {
-    // Implement your navigation logic here
-    // For example, you can push a new page with the user's profile
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AuthorProfileDetailsScreen(author: p),
       ),
-    );
-  }
-
-  void _showUnfollowDialog(BuildContext context, String userName, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Center(
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage(
-                        authors[index].imageUrl), // Use the image URL directly
-                    radius: 60,
-                  ),
-                  SizedBox(height: 24.0),
-                  Text(
-                    userName,
-                    style: TextStyle(
-                      fontFamily: 'Jost',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  Text('You want to remove $userName'),
-                  Text(' from your followers?'),
-                  SizedBox(height: 20.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle unfollow button press in the dialog
-                      setState(() {
-                        // Remove the index from the visibleIndices list
-                        visibleIndices.removeAt(index);
-                      });
-                      Navigator.pop(context); // Close the dialog
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: myColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    child: Text(
-                      "remove",
-                      style: TextStyle(color: Colors.white, fontFamily: 'Jost'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

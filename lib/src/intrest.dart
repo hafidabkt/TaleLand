@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project/src/color.dart';
 import 'package:project/class/categoryClass.dart';
 import 'package:project/main.dart';
-import 'package:project/class/profileClass.dart';
+import 'package:project/backend/backend.dart';
+import 'package:project/global.dart';
 
 List<int> selected = [];
 
@@ -63,9 +64,10 @@ class _IntrestPageState extends State<IntrestScreen> {
             ),
             ElevatedButton(
               onPressed: canClick
-                  ? () {
-                      user.forYou = selected;
-                      print(user.forYou);
+                  ? () async {
+                      user!.forYou = selected;
+                      ForYou(selected,user!.id);
+                      print(user!.forYou);
                       Navigator.push(
                         context,
                         MaterialPageRoute(

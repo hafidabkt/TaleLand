@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:project/src/bookDetailScreen.dart';
 import 'package:project/src/authorProfile.dart';
@@ -6,110 +5,104 @@ import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/bookCard.dart';
-
-
-List<Book> notPublished = [];
+import 'package:project/backend/backend.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreen createState() => _HomeScreen();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreen extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Book>> forYouBooks;
+
+  @override
+  void initState() {
+    super.initState();
+    forYouBooks = getForYou();
+  }
+  @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            margin: EdgeInsets.only(bottom: 0, left: 20, top: 50, right: 20),
-            child: Text(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildSection(
               'Book of the month',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              bookOftheMonth.map((book) => BookCard(book: book)).toList(),
             ),
-          ),
-          Container(
-            height: 300,
-            margin: EdgeInsets.all(8),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: bookOftheMonth.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookDetailsScreen(book: bookOftheMonth[index]),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    child: BookCard(book: bookOftheMonth[index]),
-                  ),
-                );
-              },
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 0, left: 20, top: 20, right: 20),
-            child: Text(
+            _buildSection(
               'Popular authors',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              popular
+                  .map((author) => AuthorProfileCard(author: author))
+                  .toList(),
             ),
-          ),
-          // Popular Writers
-          Container(
-            height: 201,
-            width: 150,
-            margin: EdgeInsets.only(bottom: 12, left: 25, top: 12, right: 20),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: popular.length,
-              itemBuilder: (context, index) {
-                return AuthorProfileCard(author: popular[index]);
+            FutureBuilder<List<Book>>(
+              future: forYouBooks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // 'For you' section
+                  return _buildSection(
+                    'For you',
+                    snapshot.data!
+                        .map(
+                          (book) => GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BookDetailsScreen(book: book),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              child: BookCard(book: book),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                }
               },
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSection(String title, List<Widget> items) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 0, left: 20, top: 20, right: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          // For You
-          Container(
-            margin: EdgeInsets.only(bottom: 0, left: 20, top: 20, right: 20),
-            child: Text(
-              'For you',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
+          SizedBox(height: 8),
           Container(
             height: 300,
             margin: EdgeInsets.all(8),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: forYou.length,
+              itemCount: items.length,
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            BookDetailsScreen(book: forYou[index]),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    child: BookCard(book: books[index]),
-                  ),
-                );
+                return items[index];
               },
             ),
           ),
         ],
       ),
-    ));
+    );
   }
 }
 
@@ -139,9 +132,7 @@ class AuthorProfileCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Text(
               author.name,
               style: TextStyle(
@@ -155,8 +146,7 @@ class AuthorProfileCard extends StatelessWidget {
               width: 90,
               height: 120,
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(10), // Set the desired radius
+                borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: AssetImage(author.imageUrl),

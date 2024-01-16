@@ -4,6 +4,7 @@ import 'package:project/class/profileClass.dart';
 import 'package:project/class/bookClass.dart';
 import 'bookList.dart';
 import 'package:project/utils/constant.dart';
+import 'package:project/global.dart';
 
 class AuthorProfileDetailsScreen extends StatefulWidget {
   final Profile author;
@@ -272,12 +273,12 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
 
   Future<void> _blockUser(BuildContext context) async {
     setState(() {
-      user.blockedList.add(widget.author.id);
-      print(user.blockedList);
+      user!.blockedList.add(widget.author.id);
+      print(user!.blockedList);
     });
     final response01 = await supabase.from('blockedlist').upsert([
       {
-        'blocker_id': user.id,
+        'blocker_id': user!.id,
         'blocked_profile_id': widget.author.id,
       },
     ]);
@@ -292,25 +293,27 @@ class _AuthorProfileDetailsScreen extends State<AuthorProfileDetailsScreen> {
       isFollowed = !isFollowed;
     });
     if (isFollowed) {
-      user.followeesList.add(widget.author.id);
+      user!.followeesList.add(widget.author.id);
+      user!.followers++;
       final response = await supabase.from('followings').upsert([
         {
-          'follower_id': user.id,
+          'follower_id': user!.id,
           'followee_id': widget.author.id,
         },
       ]);
     } else {
-      user.followeesList.remove(widget.author.id);
+      user!.followeesList.remove(widget.author.id);
+      user!.followers--;
       final response = await supabase
           .from('followings')
           .delete()
           .eq('followee_id', widget.author.id);
     }
-    print(user.followeesList);
+    print(user!.followeesList);
   }
 
   bool isFollow(int id) {
-    if (user.followeesList.contains(id)) {
+    if (user!.followeesList.contains(id)) {
       return true;
     }
     return false;

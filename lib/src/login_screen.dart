@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:project/backend/backend.dart';
-import 'package:project/class/profileClass.dart';
-import 'package:project/main.dart';
 import 'package:project/src/color.dart';
 import 'package:project/components/components.dart';
 import 'package:project/components/under_part.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/widgets/widgets.dart';
-import 'package:project/src/home.dart';
+import 'package:project/src/Home.dart';
 import 'package:project/src/resetPassword.dart';
 import 'package:project/utils/constant.dart';
+import 'package:project/global.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -143,8 +142,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 .eq('password',
                                                     passwordController.text)
                                                 .single();
-                                            user =
-                                                await getProfile(userResponse['id']);
+                                            final user = await getProfile(
+                                                userResponse['id']);
                                             if (userResponse != null) {
                                               // User exists in the 'users' table, login is successful
                                               print('Login successful');
@@ -156,8 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   backgroundColor: Colors.green,
                                                 ),
                                               );
-
-                                              // Navigate to the desired screen (replace 'MyApplicationPage' with your actual page)
+                                              
+                                              getForYou();
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
@@ -279,4 +278,3 @@ iconButton(BuildContext context) {
     ],
   );
 }
-

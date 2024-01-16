@@ -2,7 +2,6 @@ import 'package:project/backend/backend.dart';
 
 import 'profileClass.dart';
 
-List<Book> forYou = [];
 List<Book> bookOftheMonth = [];
 List<Book> books = [];
 
@@ -36,28 +35,12 @@ class Book {
     this.tags = "",
     required this.parts,
   });
-
-  void printDetails() {
-    print('Book Details:');
-    print('Title: $title');
-    print('Category: $category');
-    print('Description: $description');
-    print('Likes: $likes');
-    print('Rating: $rating');
-    print('Views: $views');
-    print('Comments: $comments');
-    print('Published: ${isPublished ? 'Yes' : 'No'}');
-    print('Tags: $tags');
-    print('Book ID: $bookId');
-  }
 }
 
 class Part {
   String title;
   String content;
   int bookid;
-  
-
   Part(
       {required this.title,
       required this.content,

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/chatList.dart';
 import 'package:project/src/bookshelf.dart';
 import 'package:project/src/search.dart';
 import 'package:project/src/homePage.dart';
-import 'package:project/src/userProfile.dart';
 import 'package:project/src/screens.dart';
-import 'package:project/src/notifications.dart';
 import 'package:project/src/writeScreen.dart';
+import 'package:project/global.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -17,9 +15,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-
-  final Profile author = authors[0];
-
   // Define your pages here
   final List<Widget> _pages = [
     HomePage(),
@@ -64,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/profile_picture.png'),
+                backgroundImage: AssetImage(user!.imageUrl),
               ),
             ),
           ),
@@ -145,9 +140,7 @@ class ChatPage extends StatelessWidget {
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Profile2(
-      author: authors[authors.length - 1],
-    );
+    return Profile2();
   }
 }
 

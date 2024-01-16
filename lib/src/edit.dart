@@ -4,11 +4,11 @@ import 'package:project/src/bookCard.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/editStory.dart';
 import 'package:project/components/netBooks.dart';
-import 'package:project/src/homePage.dart';
 
+List<Book> notPublished = [];
 class edit extends StatelessWidget {
+
   @override
-  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

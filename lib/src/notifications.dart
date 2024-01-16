@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:project/class/notificationClass.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
-import 'package:project/class/messageClass.dart';
+import 'package:supabase/supabase.dart';
+import 'package:project/backend/backend.dart';
+import 'package:project/utils/constant.dart';
+import 'package:project/global.dart';
 
 class NotificationScreenState extends StatelessWidget {
+  final GlobalKey<RefreshIndicatorState> _refreshKey =
+      GlobalKey<RefreshIndicatorState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,36 +18,58 @@ class NotificationScreenState extends StatelessWidget {
         backgroundColor: myColor,
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: CustomRectangularButton2(),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        key: _refreshKey,
+        future: fetchNotifications(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            List<Map<String, dynamic>> notifications = snapshot.data ?? [];
+
+            return CustomRectangularButton2(
+              notifications: notifications,
+              refreshKey: _refreshKey,
+            );
+          }
+        },
+      ),
     );
   }
-}
 
-class CustomRectangularButton2 extends StatefulWidget {
-  final Profile me = authors[0];
-  @override
-  _CustomRectangularButtonState2 createState() =>
-      _CustomRectangularButtonState2();
-}
+  Future<List<Map<String, dynamic>>> fetchNotifications() async {
+    final response =
+        await supabase.from('notificated').select().eq('user_id', user!.id);
+    List<Map<String, dynamic>> notifications = [];
+    for (var row in response as List) {
+      final notifResponse =
+          await supabase.from('notif').select().eq('notif_id', row['notif_id']);
+      final notifData = notifResponse;
 
-class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
-  String selectedOption = 'Notifications';
-
-  void selectOption(String option) {
-    setState(() {
-      selectedOption = option;
-    });
+      if (notifData != null && notifData.isNotEmpty) {
+        final notifItem = notifData.first;
+        notifications.add({
+          'title': notifItem['title'],
+          'content': notifItem['content'],
+          'notif_id': notifItem['notif_id'],
+        });
+      }
+    }
+    return notifications;
   }
+}
+
+class CustomRectangularButton2 extends StatelessWidget {
+  final List<Map<String, dynamic>> notifications;
+  final GlobalKey<RefreshIndicatorState> refreshKey;
+
+  const CustomRectangularButton2(
+      {required this.notifications, required this.refreshKey});
 
   @override
   Widget build(BuildContext context) {
-    List<Message> myMessage = [];
-    Message m;
-    for (m in messages) {
-      if (m.reciever == widget.me) {
-        myMessage.add(m);
-      }
-    }
     return Column(
       children: [
         SizedBox(
@@ -56,29 +83,39 @@ class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
           ),
           child: Row(
             children: <Widget>[
-              buildTab('Notifications'),
-              buildTab('Messages'),
+              Text(
+                'Notifications',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
             ],
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: selectedOption == 'Notifications'
-                ? notifications.length
-                : myMessage.length,
-            itemBuilder: (context, index) {
-              return selectedOption == 'Notifications'
-                  ? buildNotificationTile(notifications[index])
-                  : buildMessageTile(myMessage[index]);
+          child: RefreshIndicator(
+            key: refreshKey,
+            onRefresh: () async {
+              // Manually trigger a refresh
+              return refreshKey.currentState?.show();
             },
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                return buildNotificationTile(context, notifications[index]);
+              },
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget buildNotificationTile(notif notification) {
+  Widget buildNotificationTile(
+      BuildContext context, Map<String, dynamic> notification) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 20,
@@ -100,19 +137,21 @@ class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
           title: Text(
-            notification.title,
+            notification['title'],
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-          subtitle: Text(notification.subtitle,
-              style: TextStyle(color: Colors.white)),
+          subtitle: Text(
+            notification['content'],
+            style: TextStyle(color: Colors.white),
+          ),
           leading: Container(
             padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: myAccent, // Customize the notification color
+              color: myAccent,
             ),
             child: Icon(
               Icons.notifications_active,
@@ -126,101 +165,20 @@ class _CustomRectangularButtonState2 extends State<CustomRectangularButton2> {
                 child: Text('Delete Notification'),
               ),
             ],
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 'delete') {
-                notifications.remove(notification);
+                await deleteNotif(notification['notif_id']);
+                // Trigger a refresh of the FutureBuilder
+                refreshKey.currentState?.show();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Deleting notification'),
+                  ),
+                );
               }
             },
             icon: Icon(Icons.more_vert),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildMessageTile(Message message) {
-    // Customize the appearance of the message tile based on your design
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 15,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: myBrownColor, // Customize the color for messages
-          boxShadow: [
-            BoxShadow(
-              color: myAccent.withOpacity(0.4),
-              spreadRadius: 2,
-              blurRadius: 3,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-          title: Text(
-            message.sender.name,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          subtitle: Text(message.text, style: TextStyle(color: Colors.white)),
-          leading: Container(
-            padding: EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: myAccent, // Customize the message color
-            ),
-            child: Icon(
-              Icons.mail_outline,
-              color: Colors.white,
-            ),
-          ),
-          trailing: PopupMenuButton<String>(
-            itemBuilder: (context) => [
-              PopupMenuItem<String>(
-                value: 'delete',
-                child: Text('Delete Message'),
-              ),
-            ],
-            onSelected: (value) {
-              if (value == 'delete') {
-                messages.remove(message);
-              }
-            },
-            icon: Icon(Icons.more_vert),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Expanded buildTab(String option) {
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          selectOption(option);
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              option,
-              style: TextStyle(
-                fontSize: 16.0,
-                color: selectedOption == option ? Colors.black : Colors.black,
-              ),
-            ),
-            if (selectedOption == option)
-              Container(
-                height: 2.0,
-                width: 130,
-                color: myColor,
-              ),
-          ],
         ),
       ),
     );

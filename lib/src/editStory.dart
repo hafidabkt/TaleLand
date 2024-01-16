@@ -254,6 +254,7 @@ class _EditStoryState extends State<EditStory> {
         TextButton(
             onPressed: () async {
               await _save();
+              _showUnfollowDialog(context);
               Navigator.pop(context);
             },
             child: Text(
@@ -274,5 +275,50 @@ class _EditStoryState extends State<EditStory> {
       widget.book.tags = tagsController.text;
       Navigator.pop(context);
     });
+  }
+
+  void _showUnfollowDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 20.0),
+                  Text('You want to make it public'),
+                  SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Handle unfollow button press in the dialog
+                      setState(() {
+                       
+                      });
+                      Navigator.pop(context); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: myColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      "Public",
+                      style: TextStyle(color: Colors.white, fontFamily: 'Jost'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

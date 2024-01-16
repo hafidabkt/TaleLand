@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/global.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/resetPassword.dart';
 import 'package:project/src/nameReset.dart';
@@ -63,6 +64,7 @@ class ProfileSettingsScreen extends StatelessWidget {
             'Logout',
             Icons.exit_to_app,
             () {
+              user = null;
               Navigator.of(context).popUntil((route) => route.isFirst);
               // Push the TargetScreen onto the navigation stack
               Navigator.of(context).push(

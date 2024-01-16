@@ -3,7 +3,7 @@ import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
-
+import 'package:project/global.dart';
 
 class BookCard extends StatefulWidget {
   final Book book;
@@ -149,14 +149,14 @@ class _BookCardState extends State<BookCard> {
 }
 
 bool isSaved(int id) {
-  if (user.readingList.contains(id) || user.toReadList.contains(id)) {
+  if (user!.readingList.contains(id) || user!.toReadList.contains(id)) {
     return true;
   }
   return false;
 }
 
 bool isliked(int id) {
-  if (user.favoriteBooks.contains(id)) {
+  if (user!.favoriteBooks.contains(id)) {
     return true;
   }
   return false;

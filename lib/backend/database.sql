@@ -348,3 +348,45 @@ ALTER TABLE book
 ADD CONSTRAINT fk_category_id
 FOREIGN KEY (category)
 REFERENCES category(category_id);
+
+create table
+   comment (
+    comment_id bigint primary key generated always as identity,
+    content text not null,
+    user_id INT,
+    book_id INT
+  );
+ALTER TABLE comment
+ADD CONSTRAINT fk_book_id
+FOREIGN KEY (book_id)
+REFERENCES book(book_id);
+ALTER TABLE comment
+ADD CONSTRAINT fk_user_id
+FOREIGN KEY (user_id)
+REFERENCES profiles(id);
+
+create table
+   notif (
+    notif_id bigint primary key generated always as identity,
+    content text not null,
+    book_id INT,
+    part_id INT,
+    seen boolean,
+    title text not null
+    );
+ALTER TABLE notif
+ADD CONSTRAINT fk_book_id
+FOREIGN KEY (book_id)
+REFERENCES book(book_id);
+ALTER TABLE notif
+ADD CONSTRAINT fk_part_id
+FOREIGN KEY (part_id)
+REFERENCES part(id);
+
+CREATE TABLE notificated (
+  notif_id INT,
+  user_id INT,
+  seen BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (notif_id, user_id)
+);
+

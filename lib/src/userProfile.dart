@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project/src/homePage.dart';
 import 'bookList.dart';
 import 'package:project/src/color.dart';
 import 'package:project/widgets/widgets.dart';
@@ -9,13 +8,9 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project/class/bookClass.dart';
-import 'package:project/main.dart';
-import 'package:project/class/profileClass.dart';
+import 'package:project/global.dart';
 
 class Profile2 extends StatefulWidget {
-  final Profile author;
-  Profile2({required this.author});
-
   @override
   State<Profile2> createState() => _Profile2State();
 }
@@ -121,7 +116,7 @@ class _Profile2State extends State<Profile2> {
                             radius: 50,
                             backgroundImage: _image != null
                                 ? FileImage(_image!) as ImageProvider<Object>?
-                                : AssetImage(user.imageUrl),
+                                : AssetImage(user!.imageUrl),
                           ),
                         ),
                         Positioned(
@@ -140,7 +135,7 @@ class _Profile2State extends State<Profile2> {
                     Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Text(
-                        user.name,
+                        user!.name,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -153,7 +148,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${user.followers}',
+                              '${user!.followers}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -184,7 +179,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${user.published}',
+                              '${user!.published}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -205,7 +200,7 @@ class _Profile2State extends State<Profile2> {
                         Column(
                           children: [
                             Text(
-                              '${user.bookList}',
+                              '${user!.bookList}',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
@@ -247,7 +242,7 @@ class _Profile2State extends State<Profile2> {
               child: Padding(
                 padding: EdgeInsets.all(12),
                 child: Text(
-                  '''${user.bio}''',
+                  '''${user!.bio}''',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                 ),
               ),
@@ -272,7 +267,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(bookies: books, book: user.publishedBooks),
+                child: bookList(bookies: books, book: user!.publishedBooks),
               ),
             ),
             Padding(
@@ -296,7 +291,7 @@ class _Profile2State extends State<Profile2> {
                 width: double.infinity,
                 height: 200.0,
                 child: bookList(
-                    bookies: notPublished, book: user.notPublishedBooks),
+                    bookies: books, book: user!.publishedBooks),
               ),
             ),
             Padding(
@@ -319,7 +314,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(bookies: books, book: user.recommendationList),
+                child: bookList(bookies: books, book: user!.recommendationList),
               ),
             ),
           ],

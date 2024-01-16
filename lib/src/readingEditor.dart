@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/color.dart';
-import 'package:project/class/profileClass.dart';
+import 'package:project/global.dart';
+import 'package:project/backend/backend.dart';
+
+class Comment {
+  String content;
+  int userId;
+
+  Comment({
+    required this.content,
+    required this.userId,
+  });
+}
 
 class readerScreen extends StatefulWidget {
   final Book book;
@@ -43,7 +55,6 @@ class _readerScreen extends State<readerScreen> {
   }
 }
 
-// ignore: must_be_immutable
 class readerScreenhelper extends StatefulWidget {
   final Book book;
   bool isDarkMode;
@@ -58,19 +69,28 @@ class readerScreenhelper extends StatefulWidget {
 class _readerScreenhelper extends State<readerScreenhelper> {
   late bool saved; // Declare as late to initialize it in initState
   late bool isLiked;
+  List<Comment> comments = [];
   @override
   void initState() {
     super.initState();
-    saved = isSaved(widget.book.bookId); // Initialize saved in initState
+    saved = isSaved(widget.book.bookId);
     isLiked = isliked(widget.book.bookId);
     addToReadingList(widget.book.bookId);
+    fetchData();
+  }
+  void fetchData() async {
+    // Assuming getComments returns a List<Comment>
+    List<Comment> fetchedComments = await getComments(widget.book.bookId);
+    
+    setState(() {
+      comments = fetchedComments;
+    });
   }
 
   bool isBottomBarVisible = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   TextEditingController _commentController = TextEditingController();
-  List<String> comments = ['perfect timing for the drop of this chapter'];
 
   double _fontSize = 16.0; // Default font size
 
@@ -98,7 +118,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     children: [
                       ...comments.map(
                         (comment) => ListTile(
-                          title: Text(comment),
+                          title: Text(comment.content),
                         ),
                       ),
                     ],
@@ -116,9 +136,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: () {},
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
@@ -144,15 +162,16 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                           Size.fromWidth(180),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         String comment = _commentController.text;
                         if (comment.isNotEmpty) {
                           setState(() {
-                            comments.add(comment);
+                            comments.add(
+                                Comment(content: comment, userId: user!.id));
                             _commentController.clear();
+                            addComment(comment,widget.book.bookId);
                           });
                         }
-                        Navigator.of(context).pop();
                       },
                       child: Text("Submit"),
                     ),
@@ -238,16 +257,11 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     saved ? Icons.bookmark : Icons.bookmark_border,
                     color: Colors.white,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       saved = !saved;
-                      if (saved) {
-                        user.readingList.add(widget.book.bookId);
-                      } else {
-                        user.readingList.remove(widget.book.bookId);
-                      }
-                      print(user.readingList);
                     });
+                    likeButton(widget.book, isLiked);
                   },
                 ),
                 IconButton(
@@ -255,15 +269,11 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     isLiked ? Icons.star : Icons.star_border,
                     color: Colors.white,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       isLiked = !isLiked;
-                      if (isLiked) {
-                        user.favoriteBooks.add(widget.book.bookId);
-                      } else {
-                        user.favoriteBooks.remove(widget.book.bookId);
-                      }
                     });
+                    likeButton(widget.book, isLiked);
                   },
                 ),
                 IconButton(
@@ -401,24 +411,24 @@ class MyDrawer extends StatelessWidget {
 }
 
 bool isSaved(int id) {
-  if (user.readingList.contains(id) || user.toReadList.contains(id)) {
+  if (user!.readingList.contains(id) || user!.toReadList.contains(id)) {
     return true;
   }
   return false;
 }
 
 bool isliked(int id) {
-  if (user.favoriteBooks.contains(id)) {
+  if (user!.favoriteBooks.contains(id)) {
     return true;
   }
   return false;
 }
 
 void addToReadingList(int id) {
-  if (user.toReadList.contains(id)) {
-    user.toReadList.remove(id);
+  if (user!.toReadList.contains(id)) {
+    user!.toReadList.remove(id);
   }
-  if(!user.readingList.contains(id)){
-    user.readingList.add(id);
-  } 
+  if (!user!.readingList.contains(id)) {
+    user!.readingList.add(id);
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/readingEditor.dart';
 import 'package:project/class/bookClass.dart';
+import 'package:project/global.dart';
 
 class BookshelfScreen extends StatelessWidget {
   @override
@@ -16,9 +17,9 @@ class BookshelfScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            buildSection('Reading', theBooks(user.readingList), context),
-            buildSection('To Read', theBooks(user.toReadList), context),
-            buildSection('Favorites', theBooks(user.favoriteBooks), context),
+            buildSection('Reading', theBooks(user!.readingList), context),
+            buildSection('To Read', theBooks(user!.toReadList), context),
+            buildSection('Favorites', theBooks(user!.favoriteBooks), context),
           ],
         ),
       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project/class/profileClass.dart'; // Import your Profile class
-import 'package:project/backend/backend.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // Import the flutter_svg package
+import 'package:project/class/profileClass.dart';
 import 'package:project/src/authorProfile.dart';
-import 'package:project/src/homePage.dart'; // Import your backend functions
+import 'package:project/src/color.dart';
 
 class FilteredProfilesScreen extends StatefulWidget {
   final List<Profile> filteredProfiles;
@@ -18,14 +18,26 @@ class _FilteredProfilesScreenState extends State<FilteredProfilesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Filtered Profiles'),
+        title: Text('Filtered Profiles', style: TextStyle(color: Colors.white)),
+        backgroundColor: myAccent,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: ListView.builder(
-        itemCount: widget.filteredProfiles.length,
-        itemBuilder: (context, index) {
-          return buildProfileCard(widget.filteredProfiles[index]);
-        },
-      ),
+      body: widget.filteredProfiles.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Use SvgPicture.asset for SVG images
+                  SvgPicture.asset('assets/not_found.svg', height: 150, width: 150),
+                ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: widget.filteredProfiles.length,
+              itemBuilder: (context, index) {
+                return buildProfileCard(widget.filteredProfiles[index]);
+              },
+            ),
     );
   }
 
@@ -41,12 +53,13 @@ class _FilteredProfilesScreenState extends State<FilteredProfilesScreen> {
         subtitle: Text(profile.bio),
         onTap: () {
           Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AuthorProfileDetailsScreen(
-                              author: profile),
-                        ),
-                      );
+            context,
+            MaterialPageRoute(
+              builder: (context) => AuthorProfileDetailsScreen(
+                author: profile,
+              ),
+            ),
+          );
         },
       ),
     );

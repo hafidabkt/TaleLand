@@ -4,10 +4,12 @@ import 'package:project/src/intrest.dart';
 import 'package:project/components/components.dart';
 import 'package:project/components/under_part.dart';
 import 'package:project/src/screens.dart';
+import 'package:project/utils/constant.dart';
 import 'package:project/widgets/widgets.dart';
 import 'package:project/src/color.dart';
 import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:project/global.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -20,69 +22,88 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _signUpLoading = false;
   final _formkey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    TextEditingController nameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    String gender = '';
-    Future<void> saveUserDataToDatabase(
-        String email, String password, String name, String gender) async {
-      try {
-        final client = Supabase.instance.client;
-        final response = await client.from('profiles').upsert([
-          {
-            'email': emailController.text,
-            'password': passwordController.text,
-            'name': nameController.text,
-            'gender': gender,
-          },
-        ]);
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  String gender = '';
 
-        if (response.error == null) {
-          print('User data saved to the database!');
-          final Map<String, dynamic> responseData = json.decode(response.body);
-          final Map<String, dynamic> me = responseData['user'];
-          final user = Profile(
-              email: me['email'],
-              name: me['name'],
-              imageUrl: 'assets/profile01.png',
-              gender: me['gender'],
-              publishedBooks: [],
-              notPublishedBooks: [],
-              favoriteBooks: [],
-              forYou: [],
-              blockedList: [],
-              followeesList: [],
-              followersList: [],
-              toReadList: [],
-              readingList: [],
-              recommendationList: [],
-              id: me['id']);
-        } else {
-          print('Failed to save user data: ${response.error!.message}');
-        }
-      } catch (error) {
-        print('Error during database operation: $error');
-      }
-    }
-    Future<void> signUp(
-        String name, String email, String password, String gender) async {
-      try {
-        final signUpResponse = await Supabase.instance.client.auth.signUp(
-          email: emailController.text,
-          password: passwordController.text,
+  Future<Object?> saveUserDataToDatabase(
+    String email, String password, String name, String gender,
+  ) async {
+    try {
+      final response = await supabase.from('profiles').upsert([
+        {
+          'email': email,
+          'password': password,
+          'name': name,
+          'gender': gender,
+        },
+      ]);
+      print(response);
+      if (response == null) {
+        print('User data saved to the database!');
+        final me = await supabase
+            .from('profiles')
+            .select()
+            .eq('email', email)
+            .eq('name', name)
+            .eq('gender', gender)
+            .single();
+        user = Profile(
+          email: me['email'],
+          name: me['name'],
+          imageUrl: 'assets/profile01.png',
+          gender: me['gender'],
+          publishedBooks: [],
+          notPublishedBooks: [],
+          favoriteBooks: [],
+          forYou: [],
+          blockedList: [],
+          followeesList: [],
+          followersList: [],
+          toReadList: [],
+          readingList: [],
+          recommendationList: [],
+          id: me['id'],
         );
-        if (signUpResponse.user != null) {
-          // Call saveUserDataToDatabase function here
-          await saveUserDataToDatabase(
-            emailController.text,
-            passwordController.text,
-            nameController.text,
-            gender,
-          );
+        print(user!.id);
+      } else {
+        print('Failed to save user data: ${response.error!.message}');
+        return response.error!.message;
+      }
+    } catch (error) {
+      print('Error during database operation: $error');
+      return error;
+    }
+  }
 
+  Future<void> signUp(
+    String name, String email, String password, String gender,
+  ) async {
+    try {
+      // Validate the form
+      final isValidate = _formkey.currentState?.validate();
+      if (isValidate != true) {
+        return;
+      }
+
+      // Perform sign-up
+      final signUpResponse = await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+      );
+
+      if (signUpResponse.user != null) {
+        // Save user data to the database
+        final saveResponse = await saveUserDataToDatabase(
+          email,
+          password,
+          name,
+          gender,
+        );
+
+        if (saveResponse == null) {
+          // Move to the next screen if sign-up and data save are successful
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -90,10 +111,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           );
         }
-      } catch (error) {
-        print('Error during sign up: $error');
       }
+    } catch (error) {
+      print('Error during sign up: $error');
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
 
     return SafeArea(
       child: Form(
@@ -180,15 +206,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               controller: emailController,
                               cursorColor: myBlueColor,
                               decoration: InputDecoration(
-                                  icon: Icon(
-                                    Icons.email,
-                                    color: Colors.white,
-                                  ),
-                                  hintText: "Email",
-                                  hintStyle: const TextStyle(
-                                      fontFamily: 'OpenSans',
-                                      color: Colors.grey),
-                                  border: InputBorder.none),
+                                icon: const Icon(
+                                  Icons.email,
+                                  color: Colors.white,
+                                ),
+                                hintText: "Email",
+                                hintStyle: const TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  color: Colors.grey,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                }
+                                // Add additional email validation if needed
+                                return null;
+                              },
                             ),
                           ),
                           TextFieldContainer(
@@ -196,15 +231,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               controller: nameController,
                               cursorColor: myBlueColor,
                               decoration: InputDecoration(
-                                  icon: Icon(
-                                    Icons.person,
-                                    color: Colors.white,
-                                  ),
-                                  hintText: "Name",
-                                  hintStyle: const TextStyle(
-                                      fontFamily: 'OpenSans',
-                                      color: Colors.grey),
-                                  border: InputBorder.none),
+                                icon: const Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                ),
+                                hintText: "Name",
+                                hintStyle: const TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  color: Colors.grey,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your name';
+                                }
+                                // Add additional name validation if needed
+                                return null;
+                              },
                             ),
                           ),
                           TextFieldContainer(
@@ -213,19 +257,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               cursorColor: myPinkColor,
                               controller: passwordController,
                               decoration: const InputDecoration(
-                                  icon: Icon(
-                                    Icons.lock,
-                                    color: Colors.white,
-                                  ),
-                                  hintText: "Password",
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'OpenSans',
-                                      color: Colors.grey),
-                                  suffixIcon: Icon(
-                                    Icons.visibility,
-                                    color: myPinkColor,
-                                  ),
-                                  border: InputBorder.none),
+                                icon: Icon(
+                                  Icons.lock,
+                                  color: Colors.white,
+                                ),
+                                hintText: "Password",
+                                hintStyle: TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  color: Colors.grey,
+                                ),
+                                suffixIcon: Icon(
+                                  Icons.visibility,
+                                  color: myPinkColor,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+                                // Add additional password validation if needed
+                                return null;
+                              },
                             ),
                           ),
                           _signUpLoading
@@ -235,27 +288,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               : RoundedButton(
                                   text: 'SIGN UP',
                                   press: () async {
-                                    print('Email: ${emailController.text}');
-                                    print(
-                                        'Password: ${passwordController.text}');
-                                    print('Name: ${nameController.text}');
-                                    print('Gender: $gender');
+                                    // Validate the form
                                     final isValidate =
                                         _formkey.currentState?.validate();
                                     if (isValidate != true) {
                                       return;
-                                    } else {
-                                      print('Form is valid');
-                                      setState(() {
-                                        _signUpLoading = true;
-                                      });
                                     }
-                                    ;
+
+                                    // Set loading state
+                                    setState(() {
+                                      _signUpLoading = true;
+                                    });
+
+                                    // Perform sign-up
                                     await signUp(
-                                        emailController.text,
-                                        passwordController.text,
-                                        nameController.text,
-                                        gender);
+                                      nameController.text,
+                                      emailController.text,
+                                      passwordController.text,
+                                      gender,
+                                    );
+
+                                    // Reset loading state
                                     setState(() {
                                       _signUpLoading = false;
                                     });
@@ -268,7 +321,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             title: "Already have an account?",
                             navigatorText: "Login here",
                             onTap: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => LoginScreen(),

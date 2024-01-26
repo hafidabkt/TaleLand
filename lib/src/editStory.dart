@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:project/global.dart';
+import 'package:project/utils/constant.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/class/bookClass.dart';
+import 'package:project/utils/constant.dart';
 
 class EditStory extends StatefulWidget {
   final Book book;
@@ -16,12 +18,14 @@ class _EditStoryState extends State<EditStory> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController tagsController = TextEditingController();
+  late bool isOngoing;
   @override
   void initState() {
     super.initState();
     titleController.text = widget.book.title;
     descriptionController.text = widget.book.description;
     tagsController.text = widget.book.tags;
+    isOngoing = widget.book.on_going;
   }
 
   Widget build(BuildContext context) {
@@ -142,7 +146,7 @@ class _EditStoryState extends State<EditStory> {
                 ),
               ),
             ),
-            Padding(
+              Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Container(
                 child: TextField(
@@ -157,6 +161,21 @@ class _EditStoryState extends State<EditStory> {
                     border: InputBorder.none, // Removes the underline
                   ),
                 ),
+              ),
+            ),
+            SizedBox(height: 20,),
+            ListTile(
+              title: Text('On going',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),),
+              trailing: Switch(
+                value: isOngoing,
+                onChanged: (value) {
+                  setState(() async {
+                    isOngoing = value;
+                    await supabase.from('book').update({'on_going': value}).eq('book_id', widget.book.bookId);
+                    widget.book.on_going = value;
+                  });
+                },
               ),
             ),
             SizedBox(
@@ -207,15 +226,18 @@ class _EditStoryState extends State<EditStory> {
                       ),
                       child: InkWell(
                         onTap: () {
-                          Part temp = Part(title: '', content: '',bookid:widget.book.bookId);
+                          Part temp = Part(
+                              title: '',
+                              content: '',
+                              bookid: widget.book.bookId);
                           widget.book.parts.add(temp);
-                          
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => WriteChapter(
-                                        part: widget.book.parts.last,partid:-1
-                                      )));
+                                      part: widget.book.parts.last,
+                                      partid: -1)));
                         },
                         child: Center(
                           child: Icon(
@@ -253,9 +275,10 @@ class _EditStoryState extends State<EditStory> {
         )),
         TextButton(
             onPressed: () async {
+              if (!widget.book.isPublished) {
+                _showUnfollowDialog(context);
+              }
               await _save();
-              _showUnfollowDialog(context);
-              Navigator.pop(context);
             },
             child: Text(
               'Save',
@@ -269,15 +292,19 @@ class _EditStoryState extends State<EditStory> {
   }
 
   Future<void> _save() async {
+    final response = await supabase.from('book').update({
+      'description': descriptionController.text,
+      'title': titleController.text,
+      'tags': tagsController.text
+    }).eq('book_id', widget.book.bookId);
     setState(() {
       widget.book.title = titleController.text;
       widget.book.description = descriptionController.text;
       widget.book.tags = tagsController.text;
-      Navigator.pop(context);
     });
   }
 
-  void _showUnfollowDialog(BuildContext context) {
+  void _showUnfollowDialog(BuildContext context) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -296,9 +323,12 @@ class _EditStoryState extends State<EditStory> {
                   SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
-                      // Handle unfollow button press in the dialog
                       setState(() {
-                       
+                        user!.notPublishedBooks.remove(widget.book.bookId);
+                        user!.publishedBooks.add(widget.book.bookId);
+                        widget.book.isPublished = true;
+                        supabase.from('book').update({'is_published': true}).eq(
+                            'book_id', widget.book.bookId);
                       });
                       Navigator.pop(context); // Close the dialog
                     },
@@ -309,8 +339,24 @@ class _EditStoryState extends State<EditStory> {
                       ),
                     ),
                     child: Text(
-                      "Public",
+                      "Yes",
                       style: TextStyle(color: Colors.white, fontFamily: 'Jost'),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                      Navigator.pop(context); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      "No",
+                      style: TextStyle(color: Colors.black, fontFamily: 'Jost'),
                     ),
                   ),
                 ],

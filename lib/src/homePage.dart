@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:project/src/bookDetailScreen.dart';
 import 'package:project/src/authorProfile.dart';
+import 'package:project/src/bookCard.dart';
+import 'package:project/src/bookDetailScreen.dart';
+import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
 import 'package:project/src/color.dart';
-import 'package:project/src/bookCard.dart';
-import 'package:project/backend/backend.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,12 +16,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Book>> forYouBooks;
+  late Future<Book> bookOftheMonth;
 
   @override
   void initState() {
     super.initState();
     forYouBooks = getForYou();
+    bookOftheMonth = getBookOftheMonth();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,15 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildSection(
-              'Book of the month',
-              bookOftheMonth.map((book) => BookCard(book: book)).toList(),
-            ),
+            _buildBookOfTheMonth(),
             _buildSection(
               'Popular authors',
-              popular
-                  .map((author) => AuthorProfileCard(author: author))
-                  .toList(),
+              popular.map((author) => AuthorProfileCard(author: author)).toList(),
             ),
             FutureBuilder<List<Book>>(
               future: forYouBooks,
@@ -45,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+                  return Text('Error fetching data: ${snapshot.error}');
                 } else {
                   // 'For you' section
                   return _buildSection(
@@ -57,8 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      BookDetailsScreen(book: book),
+                                  builder: (context) => BookDetailsScreen(book: book),
                                 ),
                               );
                             },
@@ -78,9 +75,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildBookOfTheMonth() {
+  return Container(
+    margin: EdgeInsets.all(20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Book of the month',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        FutureBuilder<Book>(
+          future: bookOftheMonth,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error fetching book of the month: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return Text('No data available for book of the month.');
+            } else {
+              return Container(
+                height: 300,
+                margin: EdgeInsets.all(8),
+                child: GestureDetector(
+                                              onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookDetailsScreen(book: snapshot.data!),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              child: BookCard(book: snapshot.data!),
+                            ),
+                )
+              );
+            }
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+
   Widget _buildSection(String title, List<Widget> items) {
     return Container(
-      margin: EdgeInsets.only(bottom: 0, left: 20, top: 20, right: 20),
+      margin: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

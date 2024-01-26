@@ -142,8 +142,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 .eq('password',
                                                     passwordController.text)
                                                 .single();
-                                            final user = await getProfile(
+                                            user = await getProfile(
                                                 userResponse['id']);
+                                            print(user!.id);
                                             if (userResponse != null) {
                                               // User exists in the 'users' table, login is successful
                                               print('Login successful');
@@ -155,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   backgroundColor: Colors.green,
                                                 ),
                                               );
-                                              
+
                                               getForYou();
                                               Navigator.pushReplacement(
                                                 context,
@@ -199,11 +200,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   title: "Don't have an account?",
                                   navigatorText: "Register here",
                                   onTap: () {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignUpScreen()),
-                                    );
+                                      MaterialPageRoute(builder: (context) => SignUpScreen()),
+                                      );
                                   },
                                 ),
                                 const SizedBox(
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>

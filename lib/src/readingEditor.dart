@@ -3,7 +3,7 @@ import 'package:project/backend/backend.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/src/color.dart';
 import 'package:project/global.dart';
-import 'package:project/backend/backend.dart';
+import 'package:project/utils/constant.dart';
 
 class Comment {
   String content;
@@ -24,7 +24,12 @@ class readerScreen extends StatefulWidget {
 
 class _readerScreen extends State<readerScreen> {
   bool isDarkMode = false;
-  int pageIndex = 0;
+  late Future<int> pageIndex;
+  @override
+  void initState() {
+    super.initState();
+    pageIndex = getPageIndex(widget.book.bookId);
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,11 +50,48 @@ class _readerScreen extends State<readerScreen> {
           ),
         ),
         backgroundColor: myColor,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.lightbulb,
+                color: !user!.recommendationList.contains(widget.book.bookId)
+                    ? Colors.white
+                    : myAccent),
+            onPressed: () async {
+              if (!user!.recommendationList.contains(widget.book.bookId)) {
+                await supabase.from('recommendationlist').upsert(
+                    {'book_id': widget.book.bookId, 'profile_id': user!.id});
+                user!.recommendationList.add(widget.book.bookId);
+              } else {
+                await supabase
+                    .from('recommendationlist')
+                    .delete()
+                    .eq('profile_id', user!.id)
+                    .eq('book_id', widget.book.bookId);
+                user!.recommendationList.remove(widget.book.bookId);
+              }
+              setState(() {});
+            },
+            tooltip: 'Recommend',
+          ),
+        ],
       ),
-      body: readerScreenhelper(
-        book: widget.book,
-        isDarkMode: isDarkMode,
-        partIndex: pageIndex,
+      body: FutureBuilder<int>(
+        future: pageIndex,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return readerScreenhelper(
+              book: widget.book,
+              isDarkMode: isDarkMode,
+              partIndex: snapshot.data!,
+            );
+          } else if (snapshot.hasError) {
+            // Handle error case
+            return Text('Error: ${snapshot.error}');
+          } else {
+            // Future is still loading
+            return CircularProgressIndicator();
+          }
+        },
       ),
     );
   }
@@ -78,10 +120,11 @@ class _readerScreenhelper extends State<readerScreenhelper> {
     addToReadingList(widget.book.bookId);
     fetchData();
   }
+
   void fetchData() async {
     // Assuming getComments returns a List<Comment>
     List<Comment> fetchedComments = await getComments(widget.book.bookId);
-    
+
     setState(() {
       comments = fetchedComments;
     });
@@ -136,7 +179,9 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
@@ -169,7 +214,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                             comments.add(
                                 Comment(content: comment, userId: user!.id));
                             _commentController.clear();
-                            addComment(comment,widget.book.bookId);
+                            addComment(comment, widget.book.bookId);
                           });
                         }
                       },
@@ -251,6 +296,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                       widget.isDarkMode = !widget.isDarkMode;
                     });
                   },
+                  tooltip: 'Mode',
                 ),
                 IconButton(
                   icon: Icon(
@@ -263,6 +309,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     });
                     likeButton(widget.book, isLiked);
                   },
+                  tooltip: 'Saving',
                 ),
                 IconButton(
                   icon: Icon(
@@ -275,15 +322,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                     });
                     likeButton(widget.book, isLiked);
                   },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.share_outlined,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    // Handle share action
-                  },
+                  tooltip: 'Like',
                 ),
                 IconButton(
                   icon: Icon(
@@ -293,6 +332,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                   onPressed: () {
                     _showFontSizeDialog(); // Show font size adjustment dialog
                   },
+                  tooltip: 'Arange Size',
                 ),
                 IconButton(
                   icon: Icon(
@@ -302,6 +342,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                   onPressed: () {
                     _showCommentsPopup(); // Handle comment action
                   },
+                  tooltip: 'Comment',
                 ),
                 IconButton(
                   icon: Icon(
@@ -311,6 +352,7 @@ class _readerScreenhelper extends State<readerScreenhelper> {
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer(); // Open the drawer
                   },
+                  tooltip: 'Parts',
                 ),
               ],
             ),
@@ -391,7 +433,12 @@ class MyDrawer extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(book.parts[index].title),
-                onTap: () {
+                onTap: () async {
+                  await supabase
+                      .from('readinglist')
+                      .update({'part_index': index})
+                      .eq('profile_id',user!.id)
+                      .eq('book_id',book.bookId);
                   Navigator.pop(context);
                   Navigator.pushReplacement(
                     context,
@@ -422,13 +469,4 @@ bool isliked(int id) {
     return true;
   }
   return false;
-}
-
-void addToReadingList(int id) {
-  if (user!.toReadList.contains(id)) {
-    user!.toReadList.remove(id);
-  }
-  if (!user!.readingList.contains(id)) {
-    user!.readingList.add(id);
-  }
 }

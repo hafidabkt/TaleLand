@@ -2,7 +2,6 @@ import 'package:project/backend/backend.dart';
 
 import 'profileClass.dart';
 
-List<Book> bookOftheMonth = [];
 List<Book> books = [];
 
 class Book {
@@ -15,6 +14,7 @@ class Book {
   int rating;
   int likes;
   int views;
+  bool on_going;
   int comments;
   String tags;
   int bookId;
@@ -27,6 +27,7 @@ class Book {
     required this.image,
     required this.description,
     required this.author,
+    this.on_going = true,
     this.likes = 0,
     this.rating = 0,
     this.views = 0,
@@ -41,11 +42,11 @@ class Part {
   String title;
   String content;
   int bookid;
-  Part(
-      {required this.title,
-      required this.content,
-      required this.bookid,
-      });
+  Part({
+    required this.title,
+    required this.content,
+    required this.bookid,
+  });
   Map<String, dynamic> toMap() {
     return {
       'title': title,

@@ -1,7 +1,5 @@
-import 'package:http/http.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/class/profileClass.dart';
-import 'package:project/src/edit.dart';
 import 'package:project/src/readingEditor.dart';
 import 'package:project/utils/constant.dart';
 import 'package:project/global.dart';
@@ -67,16 +65,6 @@ Future<Book> createStory(
       tags: tag,
       parts: []);
 
-  if (isPublic) {
-    books.add(temp);
-    user!.publishedBooks.add(temp.bookId);
-    print(books.length);
-  } else {
-    notPublished.add(temp);
-    user!.notPublishedBooks.add(temp.bookId);
-    print(user!.notPublishedBooks);
-  }
-
   final response = await supabase.from('book').upsert([
     {
       'category': temp.category,
@@ -101,9 +89,16 @@ Future<Book> createStory(
       .single();
 
   final bookId = responseAfterInsert['book_id'] as int;
-
   temp.bookId = bookId;
-
+  if (isPublic) {
+    books.add(temp);
+    user!.publishedBooks.add(temp.bookId);
+    print(books.length);
+  } else {
+    books.add(temp);
+    user!.notPublishedBooks.add(temp.bookId);
+    print(user!.notPublishedBooks);
+  }
   Part part = Part(content: '', title: '', bookid: temp.bookId);
   List<Part> parts = [];
   parts.add(part);
@@ -177,22 +172,26 @@ Future<Book> getBook(int bookId) async {
 
     // Use 'await' to make sure 'getParts' completes before continuing
     List<Part> parts = await getParts(bookId);
-
+    parts = parts.reversed.toList();
+    final temp =
+        await supabase.from('readinglist').count().eq('book_id', bookId);
+    print(temp);
+    int views = temp as int;
     Book book = Book(
-      parts: parts,
-      bookId: row['book_id'] as int ?? 0,
-      author: await getProfile(row['author_id'] as int ?? 0),
-      category: row['category'] as int ?? 0,
-      title: row['title']?.toString() ?? '',
-      image: row['image']?.toString() ?? '',
-      description: row['description']?.toString() ?? '',
-      views: row['views'] as int ?? 0,
-      isPublished: row['is_published'] as bool ?? false,
-      tags: row['tags']?.toString() ?? '',
-      comments: row['comments'] as int ?? 0,
-      rating: row['rating'] as int ?? 0,
-      likes: row['likes'] as int ?? 0,
-    );
+        parts: parts,
+        bookId: row['book_id'] as int ?? 0,
+        author: await getProfile(row['author_id'] as int ?? 0),
+        category: row['category'] as int ?? 0,
+        title: row['title']?.toString() ?? '',
+        image: row['image']?.toString() ?? '',
+        description: row['description']?.toString() ?? '',
+        views: views,
+        isPublished: row['is_published'] as bool ?? false,
+        tags: row['tags']?.toString() ?? '',
+        comments: row['comments'] as int ?? 0,
+        rating: row['rating'] as int ?? 0,
+        likes: row['likes'] as int ?? 0,
+        on_going: row['on_going'] as bool ?? true);
 
     return book;
   } catch (e) {
@@ -236,7 +235,9 @@ Future<void> getPopularProfiles() async {
   List<Profile> profiles = [];
   for (var row in response as List) {
     profile = await getProfile(row['profile_id']);
-    popular.add(profile);
+    if (!popular.contains(profile)) {
+      popular.add(profile);
+    }
   }
 }
 
@@ -294,7 +295,7 @@ Future<Profile> getProfile(int id) async {
   if (notPublishedBooks == null) {
     notPublishedBooks = [];
   }
-
+  print(notPublishedBooks);
   final favoritebooks = await supabase
       .from('favoritebooks')
       .select('book_id')
@@ -362,7 +363,7 @@ Future<Profile> getProfile(int id) async {
   String bio = profile['bio'] == null ? '' : profile['bio'];
 
   final views = await supabase.from('book').count().eq('author_id', id);
-  user = Profile(
+  Profile prof = Profile(
     email: profile['email'],
     name: profile['name'],
     imageUrl: imageUrl,
@@ -384,10 +385,10 @@ Future<Profile> getProfile(int id) async {
     bio: bio,
     id: id,
   );
-  return user!;
+  return prof;
 }
 
-void getBookOftheMonth() async {
+Future<Book> getBookOftheMonth() async {
   DateTime currentDate = DateTime.now();
   var currentMonth = currentDate.month;
   final response = await supabase
@@ -397,8 +398,7 @@ void getBookOftheMonth() async {
       .single();
   print(response);
   Book book = await getBook(response['book_id']);
-  bookOftheMonth.clear();
-  bookOftheMonth.add(book);
+  return book;
 }
 
 Future<List<Book>> filterByCategory(String category) async {
@@ -428,7 +428,7 @@ Future<List<Book>> filterByValue(String value, String selectedFilter) async {
   List<Book> filterBooks = [];
   if (selectedFilter == 'tag') {
     final response =
-        await supabase.from('book').select('*').like('tags', value);
+        await supabase.from('book').select('*').ilike('tags', '%$value%');
     if (response == null) {
       print('Error fetching books');
     }
@@ -438,7 +438,8 @@ Future<List<Book>> filterByValue(String value, String selectedFilter) async {
     }
   }
   if (selectedFilter == 'title') {
-    final response = await supabase.from('book').select('*').eq('title', value);
+    final response =
+        await supabase.from('book').select('*').ilike('title', '%$value%');
     if (response == null) {
       print('Error fetching books');
     }
@@ -454,7 +455,7 @@ Future<List<Book>> filterByValue(String value, String selectedFilter) async {
 Future<List<Profile>> filterProfile(String value) async {
   List<Profile> filtered = [];
   final response =
-      await supabase.from('profiles').select('*').eq('name', value);
+      await supabase.from('profiles').select('*').ilike('name', '%$value%');
   if (response == null) {
     print('Error fetching books');
   }
@@ -636,4 +637,30 @@ Future<List<Comment>> getComments(int id) async {
     comments.add(Comment(content: row['content'], userId: row['user_id']));
   }
   return comments;
+}
+
+Future<void> addToReadingList(int id) async {
+  if (user!.toReadList.contains(id)) {
+    user!.toReadList.remove(id);
+    final response =
+        await supabase.from('toreadlist').delete().eq('book_id', id);
+  }
+  if (!user!.readingList.contains(id)) {
+    user!.readingList.add(id);
+    final response = await supabase
+        .from('readlist')
+        .upsert({'book_id': id, 'profile_id': user!.id});
+  }
+}
+
+Future<int> getPageIndex(int id) async {
+  final response = await supabase
+      .from('readinglist')
+      .select('part_index')
+      .eq('book_id', id)
+      .eq('profile_id', user!.id)
+      .single();
+  print(response);
+  int index = response['part_index'] as int;
+  return index;
 }

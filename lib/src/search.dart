@@ -24,19 +24,37 @@ class _SearchPageState extends State<SearchScreen> {
         leading: Icon(Icons.close, color: Colors.white),
         title: TextField(
           onSubmitted: (value) async {
+              showDialog(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Row(
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 16),
+                      Text("Loading..."),
+                    ],
+                  ),
+                );
+              },
+            );
             setState(() async {
               searchText = value;
               if (selectedFilter == 'profile') {
                 filteredProfiles = await filterProfile(value);
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        FilteredProfilesScreen(filteredProfiles: filteredProfiles),
+                    builder: (context) => FilteredProfilesScreen(
+                        filteredProfiles: filteredProfiles),
                   ),
                 );
+                
               } else {
                 filtered = await filterByValue(value, selectedFilter);
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -45,7 +63,8 @@ class _SearchPageState extends State<SearchScreen> {
                   ),
                 );
               }
-            });
+            }
+            );
           },
           decoration: InputDecoration(
             hintText: 'Search...',
@@ -82,7 +101,7 @@ class _SearchPageState extends State<SearchScreen> {
                   ),
                   itemCount: categories.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return buildCategoryContainer(categories[index]);
+                    return buildCategoryContainer(category:categories[index]);
                   },
                 ),
               ),
@@ -122,20 +141,66 @@ class _SearchPageState extends State<SearchScreen> {
       ),
     );
   }
+}
 
-  Widget buildCategoryContainer(Category category) {
+class buildCategoryContainer extends StatefulWidget {
+  final Category category;
+
+  buildCategoryContainer({required this.category});
+
+  @override
+  _buildCategoryContainer createState() => _buildCategoryContainer();
+}
+
+class _buildCategoryContainer extends State<buildCategoryContainer> {
+  late Widget center;
+
+  @override
+  void initState() {
+    super.initState();
+    center = Text(
+      widget.category.name,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+    void reloadScreen() {
+    setState(() {
+      center = Text(
+        widget.category.name,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8.0),
       child: GestureDetector(
         onTap: () async {
-          print('Category pressed: ${category.name}');
-          filtered = await filterByCategory(category.name);
+          
+          print('Category pressed: ${widget.category.name}');
+          setState(() {
+            center = CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            );
+          });
+          List<Book> filtered = await filterByCategory(widget.category.name);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => FilteredBooksScreen(filtered: filtered),
-            ),
-          );
+            )
+           );
+          reloadScreen();
         },
         child: Container(
           width: 120,
@@ -143,22 +208,14 @@ class _SearchPageState extends State<SearchScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             image: DecorationImage(
-              image: AssetImage(category.imageUrl),
+              image: AssetImage(widget.category.imageUrl),
               fit: BoxFit.cover,
             ),
           ),
-          child: Center(
-            child: Text(
-              category.name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          child: Center(child: center),
         ),
       ),
     );
   }
 }
+

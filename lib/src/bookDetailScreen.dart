@@ -96,6 +96,17 @@ class _BookDetailsScreen extends State<BookDetailsScreen> {
                 ]),
               ),
               SizedBox(height: 8),
+              Center(
+                child:Text(
+                widget.book.on_going ? 'On Going' : 'Complete',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: widget.book.on_going? myBrownColor : myAccent,
+                  ),
+                  ),
+              ),
+              SizedBox(height: 8),
               Container(
                 margin: EdgeInsets.only(
                   bottom: 18,

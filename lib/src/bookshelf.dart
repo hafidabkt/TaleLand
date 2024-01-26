@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/class/profileClass.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project/src/readingEditor.dart';
 import 'package:project/class/bookClass.dart';
 import 'package:project/global.dart';
@@ -27,6 +27,41 @@ class BookshelfScreen extends StatelessWidget {
   }
 
   Widget buildSection(String title, List<Book> mylist, context) {
+    // Set<int> temp = Set<int>.from(user!.readingList);
+    // user!.readingList = temp.toList();
+    // temp = Set<int>.from(user!.favoriteBooks);
+    // user!.favoriteBooks = temp.toList();
+    // temp = Set<int>.from(user!.toReadList);
+    // user!.readingList = temp.toList();
+    if (mylist.isEmpty) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin:
+                    EdgeInsets.only(bottom: 0, left: 25, top: 12, right: 20),
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
+        ),
+        Center(
+        child: Container(
+                          margin: EdgeInsets.all(40.0),
+                          child: SvgPicture.asset('empty.svg',
+                            width: 100,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
+                        ),)
+      ]);
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

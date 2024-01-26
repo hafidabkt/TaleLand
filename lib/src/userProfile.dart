@@ -267,7 +267,7 @@ class _Profile2State extends State<Profile2> {
               child: Container(
                 width: double.infinity,
                 height: 200.0,
-                child: bookList(bookies: books, book: user!.publishedBooks),
+                child: bookList(bookies: books, book: user!.readingList),
               ),
             ),
             Padding(

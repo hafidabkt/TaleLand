@@ -5,9 +5,7 @@ import 'package:project/class/bookClass.dart';
 import 'package:project/src/editStory.dart';
 import 'package:project/components/netBooks.dart';
 
-List<Book> notPublished = [];
 class edit extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +25,8 @@ class ListOfPublished extends StatefulWidget {
 }
 
 class _ListOfPublished extends State<ListOfPublished> {
-  List<Book> booksPublished  = BooksPublished();
+  List<Book> booksPublished = BooksPublished();
+  List<Book> notPublished = BooksNotPublished();
   String selectedOption = 'Published';
   void selectOption(String option) {
     setState(() {
@@ -63,22 +62,24 @@ class _ListOfPublished extends State<ListOfPublished> {
                 : notPublished.length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                           selectedOption == 'Published' ? EditStory(book: booksPublished[index],) : EditStory (book: notPublished[index],)
-                      ),
-                    );
-                  },
-                  child: Container(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => selectedOption == 'Published'
+                            ? EditStory(
+                                book: booksPublished[index],
+                              )
+                            : EditStory(
+                                book: notPublished[index],
+                              )),
+                  );
+                },
+                child: Container(
                     child: selectedOption == 'Published'
-                  ? BookCard(book: booksPublished[index])
-                  : BookCard(book: notPublished[index])
-                  ),
-                );
-              
+                        ? BookCard(book: booksPublished[index])
+                        : BookCard(book: notPublished[index])),
+              );
             },
           ),
         ),

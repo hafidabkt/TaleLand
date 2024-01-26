@@ -65,8 +65,8 @@ class _IntrestPageState extends State<IntrestScreen> {
             ElevatedButton(
               onPressed: canClick
                   ? () async {
-                      user!.forYou = selected;
-                      ForYou(selected,user!.id);
+                      print('hey');
+                      ForYou(selected, user!.id);
                       print(user!.forYou);
                       Navigator.push(
                         context,

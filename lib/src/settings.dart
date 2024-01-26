@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/global.dart';
 import 'package:project/src/color.dart';
 import 'package:project/src/resetPassword.dart';
-import 'package:project/src/nameReset.dart';
+import 'package:project/src/resetName.dart';
 import 'package:project/src/screens.dart';
 import 'package:project/src/theme.dart';
 import 'package:project/src/blockedListScreen.dart';
@@ -61,18 +61,6 @@ class ProfileSettingsScreen extends StatelessWidget {
           ),
           buildSettingOption(
             context,
-            'Logout',
-            Icons.exit_to_app,
-            () {
-              user = null;
-              Navigator.of(context).popUntil((route) => route.isFirst);
-              // Push the TargetScreen onto the navigation stack
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SignUpScreen()));
-            },
-          ),
-          buildSettingOption(
-            context,
             'Theme',
             Icons.color_lens,
             () {
@@ -88,7 +76,19 @@ class ProfileSettingsScreen extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => blockedListScreen()));
             },
-          )
+          ),
+          buildSettingOption(
+            context,
+            'Logout',
+            Icons.exit_to_app,
+            () {
+              user = null;
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              // Push the TargetScreen onto the navigation stack
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SignUpScreen()));
+            },
+          ),
         ],
       ),
     );

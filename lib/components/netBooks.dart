@@ -1,5 +1,5 @@
-import 'package:project/class/bookClass.dart';
-import 'package:project/global.dart';
+import 'package:project/utils/class/bookClass.dart';
+import 'package:project/utils/global.dart';
 
 List<Book> BooksNotPublished() {
   List<Book> notpublished = [];

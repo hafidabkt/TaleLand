@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../src/color.dart';
+import '../theme/color.dart';
 
 class StoryTile extends StatelessWidget {
   final String backgroundImage; // User-provided background image

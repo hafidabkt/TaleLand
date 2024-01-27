@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project/src/Home.dart';
-import 'package:project/src/signup_screen.dart';
+import 'package:project/screens/home/Home.dart';
+import 'package:project/screens/Inapp/signup_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:supabase/supabase.dart';
-import 'package:project/utils/constant.dart';
-import 'package:project/src/intrest.dart';
-import 'package:project/backend/backend.dart';
-import 'package:project/global.dart';
+import 'package:project/backend/getList.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

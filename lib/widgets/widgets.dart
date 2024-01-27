@@ -6,7 +6,7 @@ export 'rounded_button.dart';
 
 
 export 'rect.dart';
-export '../src/settings.dart';
+export '../screens/settings/settings.dart';
 
 export 'messages_user.dart';
 

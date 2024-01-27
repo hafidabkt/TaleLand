@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:project/src/color.dart';
+import 'package:project/theme/color.dart';
 
 
 class RoundedButton extends StatelessWidget {
